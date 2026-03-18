@@ -10,28 +10,30 @@
 
 后续任何编码、文档、集成、验证工作，都必须以 **child issue** 作为直接执行单元。
 
+同时，GitHub issue 的标题与正文默认使用中文；文件路径、命令、标签名和必要术语可保留英文。
+
 ## 层级定义
 
 ### 1. Epic
 
 职责：
 
-- 表达 phase 目标
-- 挂接 tracking parents
-- 定义 phase 退出条件
+- 表达阶段目标
+- 挂接 tracking parent issues
+- 定义阶段退出条件
 
 规则：
 
 - 使用标签 `type/epic`
 - 不直接作为编码入口
-- 只有在所有 tracking parents 完成后才关闭
+- 只有在所有 tracking parent issues 完成后才关闭
 
 ### 2. Tracking Parent Issue
 
 职责：
 
 - 表达单个能力块的总边界
-- 聚合 child issues
+- 聚合 child implementation issues
 - 定义该能力块的整体验收
 
 规则：
@@ -53,16 +55,16 @@
 - 使用标签 `type/task`
 - 保留对应的 `phase/*` 和 `area/*`
 - 必须写清：
-  - Objective
-  - Ownership Boundary
-  - Scope
-  - Out of Scope
-  - Dependencies
-  - Expected Files
-  - Deliverables
-  - Acceptance Criteria
-  - Verification
-  - Close Rule
+  - 目标
+  - 负责边界
+  - 范围
+  - 非目标
+  - 依赖
+  - 预期文件
+  - 交付物
+  - 验收标准
+  - 验证
+  - 关闭规则
 
 ## 执行规则
 
@@ -71,6 +73,7 @@
 - 一个 subagent 一次只拥有一个 child issue。
 - 如果执行中发现 scope 膨胀，必须新开 sibling child issue，而不是扩大原 issue 边界。
 - 一个 PR 最好只对应一个 child issue；确有必要跨多个 child issue 时，必须在 PR 中说明。
+- 后续新增 issue、补充 issue 或编辑 issue，默认使用中文。
 
 ## 关闭规则
 
@@ -89,94 +92,94 @@
 
 ## 当前 Issue 树
 
-### Phase 1
+### 第 1 阶段
 
-- `#2 [Epic] Phase 1 - Single Venue Loop`
-  - `#10 [Tracking] Bootstrap perp-platform application skeleton`
-    - `#25 Bootstrap perp-platform application skeleton: create Python package and entrypoint`
-    - `#26 Bootstrap perp-platform application skeleton: add config bootstrap contract`
-    - `#27 Bootstrap perp-platform application skeleton: add shared test harness`
-  - `#11 [Tracking] Define canonical instrument and quantity model`
-    - `#28 Canonical model: define instrument identity and market enums`
-    - `#29 Canonical model: implement quantity normalization and OKX contract conversion`
-    - `#30 Canonical model: document truth fields and architecture constraints`
-  - `#12 [Tracking] Implement Bybit linear perpetual runtime bootstrap`
-    - `#31 Bybit runtime bootstrap: add config and client bootstrap`
-    - `#32 Bybit runtime bootstrap: wire public private and execution clients`
-    - `#33 Bybit runtime bootstrap: enforce one-way isolated and order capability guards`
-    - `#34 Bybit runtime bootstrap: add smoke tests for bootstrap and basic order path`
-  - `#13 [Tracking] Implement Bybit recovery and reconciliation loop`
-    - `#35 Bybit recovery loop: implement reconnect and resubscribe sequencing`
-    - `#36 Bybit recovery loop: reconcile orders positions and balances before LIVE`
-    - `#37 Bybit recovery loop: project REDUCE_ONLY and BLOCKED outcomes`
-    - `#38 Bybit recovery loop: add recovery scenario tests and runbook notes`
+- `#2 [Epic] 第 1 阶段：单交易所闭环`
+  - `#10 [Tracking] 搭建 perp-platform 应用骨架`
+    - `#25 搭建 perp-platform 应用骨架：创建 Python 包与入口点`
+    - `#26 搭建 perp-platform 应用骨架：补充配置初始化契约`
+    - `#27 搭建 perp-platform 应用骨架：补充共享测试基座`
+  - `#11 [Tracking] 定义统一合约与数量模型`
+    - `#28 统一模型：定义合约标识与市场枚举`
+    - `#29 统一模型：实现数量归一化与 OKX 张数换算`
+    - `#30 统一模型：文档化真相字段与架构约束`
+  - `#12 [Tracking] 实现 Bybit 线性永续运行时初始化`
+    - `#31 Bybit 运行时初始化：增加配置与客户端启动入口`
+    - `#32 Bybit 运行时初始化：接通公共流、私有流与执行客户端`
+    - `#33 Bybit 运行时初始化：强制单向持仓、逐仓与订单能力约束`
+    - `#34 Bybit 运行时初始化：增加启动与基础下单路径冒烟测试`
+  - `#13 [Tracking] 实现 Bybit 恢复与对账闭环`
+    - `#35 Bybit 恢复闭环：实现重连与重订阅顺序`
+    - `#36 Bybit 恢复闭环：在回到 LIVE 前完成订单、仓位与余额对账`
+    - `#37 Bybit 恢复闭环：投影 REDUCE_ONLY 与 BLOCKED 结果`
+    - `#38 Bybit 恢复闭环：补充恢复场景测试与运行手册说明`
 
-### Phase 2
+### 第 2 阶段
 
-- `#3 [Epic] Phase 2 - Three Venue Baseline`
-  - `#14 [Tracking] Implement supervisor tradeability state machine`
-    - `#39 Supervisor state machine: define state enums and transition contract`
-    - `#40 Supervisor state machine: implement stream trigger evaluation`
-    - `#41 Supervisor state machine: project venue and symbol tradeability separately`
-    - `#42 Supervisor state machine: add tests and architecture documentation`
-  - `#15 [Tracking] Add PostgreSQL truth store schema`
-    - `#43 PostgreSQL truth store: add core schema and migrations`
-    - `#44 PostgreSQL truth store: implement repositories for orders positions and balances`
-    - `#45 PostgreSQL truth store: implement tradeability and recovery persistence`
-    - `#46 PostgreSQL truth store: add integration tests and bootstrap docs`
-  - `#16 [Tracking] Implement Binance USDⓈ-M runtime and quota-safe recovery`
-    - `#47 Binance runtime: add USDⓈ-M config and client bootstrap`
-    - `#48 Binance runtime: wire public private and execution paths`
-    - `#49 Binance runtime: implement quota-safe recovery backoff policy`
-    - `#50 Binance runtime: add smoke and recovery consistency tests`
-  - `#17 [Tracking] Implement OKX USDT swap runtime and contract conversion`
-    - `#51 OKX runtime: add USDT swap config and client bootstrap`
-    - `#52 OKX runtime: implement contract-size to base_qty conversion`
-    - `#53 OKX runtime: enforce one-way isolated guards and order path`
-    - `#54 OKX runtime: add smoke and conversion regression tests`
+- `#3 [Epic] 第 2 阶段：三交易所基线`
+  - `#14 [Tracking] 实现 Supervisor 可交易性状态机`
+    - `#39 Supervisor 状态机：定义状态枚举与迁移契约`
+    - `#40 Supervisor 状态机：实现流触发器求值逻辑`
+    - `#41 Supervisor 状态机：分别投影交易所级与交易对级可交易性`
+    - `#42 Supervisor 状态机：补充测试与架构文档`
+  - `#15 [Tracking] 增加 PostgreSQL 真相存储 Schema`
+    - `#43 PostgreSQL 真相存储：增加核心 Schema 与迁移`
+    - `#44 PostgreSQL 真相存储：实现订单、仓位与余额仓储`
+    - `#45 PostgreSQL 真相存储：实现可交易性与恢复持久化`
+    - `#46 PostgreSQL 真相存储：增加集成测试与初始化文档`
+  - `#16 [Tracking] 实现 Binance USDⓈ-M 运行时与配额安全恢复`
+    - `#47 Binance 运行时：增加 USDⓈ-M 配置与客户端启动入口`
+    - `#48 Binance 运行时：接通公共流、私有流与执行路径`
+    - `#49 Binance 运行时：实现配额安全的恢复退避策略`
+    - `#50 Binance 运行时：增加冒烟与恢复一致性测试`
+  - `#17 [Tracking] 实现 OKX USDT 永续运行时与张数换算`
+    - `#51 OKX 运行时：增加 USDT 永续配置与客户端启动入口`
+    - `#52 OKX 运行时：实现张数到 base_qty 的换算`
+    - `#53 OKX 运行时：强制单向持仓、逐仓与下单路径约束`
+    - `#54 OKX 运行时：增加启动与换算回归测试`
 
-### Phase 3
+### 第 3 阶段
 
-- `#4 [Epic] Phase 3 - Checker and Dry Run`
-  - `#18 [Tracking] Add Cryptofeed checker and divergence policies`
-    - `#55 Cryptofeed checker: bootstrap service and configuration`
-    - `#56 Cryptofeed checker: ingest and normalize top-of-book for Bybit Binance OKX`
-    - `#57 Cryptofeed checker: implement freshness and divergence policies`
-    - `#58 Cryptofeed checker: emit supervisor-ready signals and tests`
-  - `#19 [Tracking] Build failure injection tooling for recovery scenarios`
-    - `#59 Failure injection: add websocket disconnect injector`
-    - `#60 Failure injection: add private-stream silence injector`
-    - `#61 Failure injection: add reconcile-diff injector`
-    - `#62 Failure injection: document operator usage and runbook integration`
-  - `#20 [Tracking] Execute small-size dry run across BTC and ETH`
-    - `#63 Dry run: prepare BTC and ETH configuration and safety gates`
-    - `#64 Dry run: implement operator checklist and audit capture tooling`
-    - `#65 Dry run: execute staged BTC and ETH rehearsal and collect evidence`
-    - `#66 Dry run: publish findings and closeout report`
+- `#4 [Epic] 第 3 阶段：校验器与干跑演练`
+  - `#18 [Tracking] 增加 Cryptofeed 校验器与偏差策略`
+    - `#55 Cryptofeed 校验器：初始化服务与配置`
+    - `#56 Cryptofeed 校验器：接入并归一化 Bybit、Binance、OKX 顶档行情`
+    - `#57 Cryptofeed 校验器：实现新鲜度与顶档偏差策略`
+    - `#58 Cryptofeed 校验器：产出 Supervisor 可消费的信号并补充测试`
+  - `#19 [Tracking] 构建恢复场景故障注入工具`
+    - `#59 故障注入：增加 WebSocket 断连注入器`
+    - `#60 故障注入：增加私有流静默注入器`
+    - `#61 故障注入：增加对账差异注入器`
+    - `#62 故障注入：文档化操作员使用方式并接入运行手册`
+  - `#20 [Tracking] 执行 BTC 与 ETH 的小规模干跑`
+    - `#63 干跑演练：准备 BTC 与 ETH 的配置和安全闸门`
+    - `#64 干跑演练：实现操作员清单与审计采集工具`
+    - `#65 干跑演练：执行分阶段 BTC 与 ETH 演练并收集证据`
+    - `#66 干跑演练：输出结项报告与发现总结`
 
-### Phase 4
+### 第 4 阶段
 
-- `#5 [Epic] Phase 4 - Platformization`
-  - `#21 [Tracking] Design external control plane and operator APIs`
-    - `#67 Control plane design: define external API surface`
-    - `#68 Control plane design: define operator action command model and auth boundary`
-    - `#69 Control plane design: define tradeability and recovery read models`
-    - `#70 Control plane design: publish platformization cut line and migration plan`
+- `#5 [Epic] 第 4 阶段：平台化`
+  - `#21 [Tracking] 设计外部控制平面与操作员 API`
+    - `#67 控制平面设计：定义外部 API 表面`
+    - `#68 控制平面设计：定义操作员动作模型与权限边界`
+    - `#69 控制平面设计：定义可交易性与恢复读模型`
+    - `#70 控制平面设计：发布平台化切分边界与迁移计划`
 
-### Phase 5
+### 第 5 阶段
 
-- `#6 [Epic] Phase 5 - Native Tier-1 Adapters`
-  - `#22 [Tracking] Design Tier-1 native adapter interface and replacement strategy`
-    - `#71 Native adapter strategy: define adapter interface and safety invariants`
-    - `#72 Native adapter strategy: map Tier-1 replacement order`
-    - `#73 Native adapter strategy: define shadow validation and parity checks`
-    - `#74 Native adapter strategy: define rollback and fallback rules`
+- `#6 [Epic] 第 5 阶段：Tier-1 原生适配器`
+  - `#22 [Tracking] 设计 Tier-1 原生适配器接口与替换策略`
+    - `#71 原生适配器策略：定义适配器接口与安全不变量`
+    - `#72 原生适配器策略：规划 Tier-1 替换顺序`
+    - `#73 原生适配器策略：定义影子验证与一致性校验`
+    - `#74 原生适配器策略：定义回滚与回退规则`
 
-### Phase 6
+### 第 6 阶段
 
-- `#7 [Epic] Phase 6 - Scale and HA`
-  - `#23 [Tracking] Define HA and multi-account expansion strategy`
-    - `#75 HA and multi-account strategy: define tenancy and account model`
-    - `#76 HA and multi-account strategy: define HA topology and failover responsibilities`
-    - `#77 HA and multi-account strategy: define long-tail venue admission checklist`
-    - `#78 HA and multi-account strategy: define operational maturity milestones and runbooks`
+- `#7 [Epic] 第 6 阶段：扩展与高可用`
+  - `#23 [Tracking] 定义高可用与多账户扩展策略`
+    - `#75 高可用与多账户策略：定义租户与账户模型`
+    - `#76 高可用与多账户策略：定义高可用拓扑与故障切换职责`
+    - `#77 高可用与多账户策略：定义长尾交易所准入清单`
+    - `#78 高可用与多账户策略：定义运维成熟度里程碑与运行手册`
