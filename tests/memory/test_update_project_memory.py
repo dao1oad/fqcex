@@ -113,8 +113,25 @@ def test_update_project_memory_includes_current_repository_context() -> None:
     assert result.returncode == 0, result.stderr
 
     content = SNAPSHOT_PATH.read_text(encoding="utf-8")
+    branch_status = run(
+        [
+            "git",
+            "status",
+            "--short",
+            "--branch",
+            "--",
+            ".",
+            ":(exclude)docs/memory/generated/project_snapshot.md",
+        ],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
 
-    assert "## main...origin/main" in content
+    assert branch_status.returncode == 0, branch_status.stderr
+    assert f"Repository Root: `{REPO_ROOT}`" in content
+    assert branch_status.stdout.strip() in content
     assert "codex/ci-cd-bootstrap" in content
     assert "Local Branches" in content
     assert "Remote Branches" in content

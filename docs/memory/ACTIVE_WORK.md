@@ -4,20 +4,20 @@
 
 - `main`
   - 当前主分支，已合并治理基础和项目记忆系统。
-  - 目前仍未包含 CI/CD 骨架和应用骨架。
+  - 目前仍未包含 `perp-platform` 应用骨架和完整交付基座。
 - `codex/ci-cd-bootstrap`
-  - 已完成 CI/CD、Playwright smoke、Docker Compose 自动部署骨架。
-  - 当前状态：未合并到 `main`。
+  - 基于旧基线携带 2 个未合并提交，内容方向对应 `#79-#83`。
+  - 当前状态：只能作为参考分支，不能直接视为可合并结果。
 - `codex/perp-platform-bootstrap`
-  - 已建立最小 Python 应用骨架与测试基础。
-  - 当前状态：未合并到 `main`。
+  - worktree 仍在，但分支相对 `main` 已无独有提交。
+  - 当前状态：属于陈旧工作区，不再代表当前应用骨架进度。
 
 ## 活跃工作结论
 
 - 项目当前的治理和上下文恢复入口已经进入 `main`。
 - 代码主线仍分散在多个未合并 feature branches。
-- `codex/ci-cd-bootstrap` 负责交付链路。
-- `codex/perp-platform-bootstrap` 负责应用骨架。
+- 交付链路现已通过 `#79-#83` 进入正式 backlog。
+- 应用骨架应直接按 `#10` 及其 child issues 推进，而不是依赖陈旧 worktree。
 
 ## 当前风险
 
@@ -27,6 +27,7 @@
 
 ## 下一步建议
 
-- 优先评估并合并 `codex/ci-cd-bootstrap`。
-- 然后推进 `codex/perp-platform-bootstrap`，让 Phase 1 有最小可运行骨架。
+- 再执行 `#25-#27`，建立 `perp-platform` 最小应用骨架。
+- 然后执行 `#81-#83`，把 CI、部署脚本和 smoke / rollback 基座落回主线。
+- 接着按 `#28-#38` 完成 Phase 1 核心闭环。
 - 每次合并或删除分支后，重新运行 `py scripts/update_project_memory.py`。

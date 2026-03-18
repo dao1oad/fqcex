@@ -7,7 +7,8 @@
 3. `README.md`
 4. `docs/roadmap/ROADMAP.md`
 5. `docs/architecture/ARCHITECTURE.md`
-6. `docs/plans/2026-03-18-project-memory-system-design.md`
+6. `docs/plans/2026-03-19-backlog-review-roadmap-alignment.md`
+7. `docs/plans/2026-03-18-project-memory-system-design.md`
 
 ## 新会话先跑什么
 
@@ -23,8 +24,9 @@ powershell -ExecutionPolicy Bypass -File scripts/project_context.ps1
 ## 当前建议切入点
 
 - 如果要继续完善治理和上下文恢复，先检查 `docs/memory/generated/project_snapshot.md` 是否已经反映当前分支和 worktree 状态。
-- 如果要继续开发交付能力，优先看 `codex/ci-cd-bootstrap` 分支。
-- 如果要继续开发应用骨架，优先看 `codex/perp-platform-bootstrap` 分支。
+- 如果要继续开发交付能力，优先按 `#79-#83` 推进，并把 `codex/ci-cd-bootstrap` 只当参考分支。
+- 如果要继续开发应用骨架，优先按 `#10` 和 `#25-#27` 推进，不要把 `codex/perp-platform-bootstrap` 当作现状真相源。
+- 如果后续再次扩展 memory 快照测试，保持“当前仓库上下文”契约，不要把断言重新硬编码为 `main`。
 
 ## 注意事项
 
