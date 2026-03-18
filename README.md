@@ -33,3 +33,6 @@ Private repository for a perpetual futures connection platform focused on multi-
 - State machine: [docs/architecture/STATE_MACHINE.md](docs/architecture/STATE_MACHINE.md)
 - Data model: [docs/architecture/DATA_MODEL.md](docs/architecture/DATA_MODEL.md)
 - Phase 1 freeze: [docs/decisions/PHASE1_FREEZE.md](docs/decisions/PHASE1_FREEZE.md)
+- Governance: [GOVERNANCE.md](GOVERNANCE.md)
+- Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Security: [SECURITY.md](SECURITY.md)

@@ -93,6 +93,9 @@ Phase 1 明确不做：
 - `docs/decisions`
 - `docs/runbooks`
 - `docs/roadmap`
+- `GOVERNANCE.md`
+- `CONTRIBUTING.md`
+- `SECURITY.md`
 
 如果改动影响 Phase 1 冻结边界，必须更新：
 
@@ -126,6 +129,7 @@ Phase 1 明确不做：
 - roadmap 以 `Phase 0` 到 `Phase 6` milestones 表达。
 - epic 使用普通 GitHub issue，并打 `type/epic` label。
 - 子 issue 必须在正文中引用所属 epic。
+- 公开仓库的协作和披露规则分别以 `GOVERNANCE.md`、`CONTRIBUTING.md`、`SECURITY.md` 为准。
 - 涉及交易安全的 issue，优先使用：
   - `type/bug`
   - `type/incident`
