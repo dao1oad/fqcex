@@ -142,3 +142,16 @@ Phase 1 明确不做：
 - 先写最小闭环，再扩范围。
 - 先保证恢复和对账正确，再追求吞吐和覆盖面。
 - 如果发现需求与 Phase 1 冻结边界冲突，先停下并更新决策文档，不要直接扩 scope。
+
+## 11. 新会话记忆入口
+
+新开会话时，优先按下面顺序恢复项目上下文：
+
+1. `docs/memory/PROJECT_STATE.md`
+2. `docs/memory/ACTIVE_WORK.md`
+3. `docs/memory/SESSION_HANDOFF.md`
+4. `py scripts/update_project_memory.py`
+5. `docs/memory/generated/project_snapshot.md`
+6. `powershell -ExecutionPolicy Bypass -File scripts/project_context.ps1`
+
+如果当前工作涉及分支状态、最近提交、open issues / PR 或 worktree，先运行 `scripts/update_project_memory.py` 再继续分析。
