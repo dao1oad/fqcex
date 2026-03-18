@@ -1,11 +1,11 @@
 # Project Snapshot
 
-Generated: 2026-03-18T10:28:58.251336+00:00
-Repository Root: `D:\fqcex\.worktrees\project-memory-system`
+Generated: 2026-03-18T10:56:36.765554+00:00
+Repository Root: `D:\fqcex`
 
 ## Current Branch
 ```text
-## codex/project-memory-system
+## main...origin/main [ahead 1]
 ```
 
 ## Local Branches
@@ -13,26 +13,27 @@ Repository Root: `D:\fqcex\.worktrees\project-memory-system`
 codex/ci-cd-bootstrap
 codex/governance-public-rules
 codex/perp-platform-bootstrap
-codex/project-memory-system
 main
 ```
 
 ## Remote Branches
 ```text
-origin/codex/ci-cd-bootstrap
-origin/main
+codex/ci-cd-bootstrap
+main
 ```
 
 ## Worktrees
 ```text
-D:/fqcex                                    575f66e [main]
+D:/fqcex                                    efe0f35 [main]
 D:/fqcex/.worktrees/ci-cd-bootstrap         19a8561 [codex/ci-cd-bootstrap]
 D:/fqcex/.worktrees/perp-platform-bootstrap 575f66e [codex/perp-platform-bootstrap]
-D:/fqcex/.worktrees/project-memory-system   a24037f [codex/project-memory-system]
 ```
 
 ## Recent Commits
 ```text
+efe0f35 fix: refresh project memory state handling
+35af1aa Merge pull request #24 from dao1oad/codex/project-memory-system
+1b6a034 docs: add initial project snapshot
 a24037f feat: add repository memory system
 2bca579 docs: add project memory system implementation plan
 fd4b7da docs: add project memory system design
