@@ -1,11 +1,11 @@
 # Project Snapshot
 
-Generated: 2026-03-18T16:29:47.618033+00:00
+Generated: 2026-03-18T16:32:34.761438+00:00
 Repository Root: `D:\fqcex`
 
 ## Current Branch
 ```text
-## main...origin/main [ahead 1]
+## main...origin/main
 ```
 
 ## Local Branches
@@ -26,7 +26,7 @@ main
 
 ## Worktrees
 ```text
-D:/fqcex                                    fd6dccf [main]
+D:/fqcex                                    9122cd0 [main]
 D:/fqcex/.worktrees/ci-cd-bootstrap         19a8561 [codex/ci-cd-bootstrap]
 D:/fqcex/.worktrees/issue-review-20260318   fd6dccf [codex/issue-review-20260318]
 D:/fqcex/.worktrees/perp-platform-bootstrap 575f66e [codex/perp-platform-bootstrap]
@@ -34,6 +34,7 @@ D:/fqcex/.worktrees/perp-platform-bootstrap 575f66e [codex/perp-platform-bootstr
 
 ## Recent Commits
 ```text
+9122cd0 docs: refresh project snapshot after issue review
 fd6dccf docs: align backlog review and fix memory snapshot test
 78e46a2 docs: require chinese for issue lifecycle updates
 d756fd0 docs: localize issue governance to chinese
@@ -43,7 +44,6 @@ efe0f35 fix: refresh project memory state handling
 35af1aa Merge pull request #24 from dao1oad/codex/project-memory-system
 1b6a034 docs: add initial project snapshot
 a24037f feat: add repository memory system
-2bca579 docs: add project memory system implementation plan
 ```
 
 ## Repository Docs
