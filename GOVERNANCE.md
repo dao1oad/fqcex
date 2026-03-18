@@ -69,12 +69,28 @@ Every PR that affects runtime, supervisor, recovery, data truth, or runbooks mus
 - roadmap phases are managed through milestones:
   - `Phase 0` to `Phase 6`
 - epics use normal GitHub issues with label `type/epic`
+- tracking parent issues use label `type/tracking`
+- child implementation issues use label `type/task`
 - delivery issues must reference their parent epic in the body
 - labels must identify both:
   - work type
   - area ownership
+- work must follow the fixed hierarchy:
+  - `Epic -> Tracking Parent Issue -> Child Implementation Issue`
+- only `type/task` issues may be used as direct coding units
+- `type/epic` and `type/tracking` issues are not direct coding entrypoints
+- tracking parents close only after all child issues close
+- epics close only after all tracking parents close
+- the detailed issue tree and execution rules live in `docs/roadmap/ISSUE_HIERARCHY.md`
 
-## 7. Safety Rules
+## 7. Subagent Execution Rules
+
+- one subagent should own one `type/task` issue at a time
+- if a task grows beyond its stated `Scope`, open a new sibling child issue instead of expanding the original issue
+- PRs should reference the child issue they complete
+- parent issue checklists must be updated as child issues close
+
+## 8. Safety Rules
 
 - public stream anomalies must be able to stop new opens
 - private stream uncertainty must prevent returning to `LIVE`
@@ -82,7 +98,7 @@ Every PR that affects runtime, supervisor, recovery, data truth, or runbooks mus
 - `BLOCKED` requires explicit operator confirmation before resume
 - manual actions must be auditable
 
-## 8. Release Rules
+## 9. Release Rules
 
 - roadmap and governance docs may release independently from code
 - before any small-size live dry run:
@@ -91,7 +107,7 @@ Every PR that affects runtime, supervisor, recovery, data truth, or runbooks mus
   - validation evidence must be recorded
 - phase completion should be reflected with tags or milestone closure
 
-## 9. Public Repository Rules
+## 10. Public Repository Rules
 
 - never commit API keys, exchange secrets, account identifiers, or sensitive logs
 - security-related disclosures should follow `SECURITY.md`

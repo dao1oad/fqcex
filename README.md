@@ -29,6 +29,7 @@ Private repository for a perpetual futures connection platform focused on multi-
 ## Docs
 
 - Roadmap: [docs/roadmap/ROADMAP.md](docs/roadmap/ROADMAP.md)
+- Issue hierarchy: [docs/roadmap/ISSUE_HIERARCHY.md](docs/roadmap/ISSUE_HIERARCHY.md)
 - Architecture: [docs/architecture/ARCHITECTURE.md](docs/architecture/ARCHITECTURE.md)
 - State machine: [docs/architecture/STATE_MACHINE.md](docs/architecture/STATE_MACHINE.md)
 - Data model: [docs/architecture/DATA_MODEL.md](docs/architecture/DATA_MODEL.md)

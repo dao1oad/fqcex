@@ -53,6 +53,25 @@ For safety-critical changes, include:
 - recovery impact
 - runbook impact
 
+## Issue Hierarchy
+
+This repository uses a three-level backlog:
+
+- `type/epic`
+- `type/tracking`
+- `type/task`
+
+Rules:
+
+- only `type/task` issues are valid direct implementation units
+- do not start coding directly from an epic or tracking issue
+- one PR should usually close one `type/task` issue
+- if implementation scope expands, open a new sibling `type/task` issue rather than silently broadening the current one
+
+Reference:
+
+- `docs/roadmap/ISSUE_HIERARCHY.md`
+
 ## Documentation Expectations
 
 Update the matching docs when applicable:
@@ -69,3 +88,4 @@ Update the matching docs when applicable:
 - undocumented runtime safety changes
 - secrets, credentials, or production-sensitive logs
 - code that claims recovery is fixed without verification evidence
+- a PR that references only an epic or tracking issue without a child implementation issue

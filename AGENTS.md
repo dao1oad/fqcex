@@ -128,13 +128,29 @@ Phase 1 明确不做：
 
 - roadmap 以 `Phase 0` 到 `Phase 6` milestones 表达。
 - epic 使用普通 GitHub issue，并打 `type/epic` label。
-- 子 issue 必须在正文中引用所属 epic。
+- tracking parent issue 使用 `type/tracking`。
+- child implementation issue 使用 `type/task`。
+- child issue 必须在正文中同时引用所属 tracking parent 和 epic。
 - 公开仓库的协作和披露规则分别以 `GOVERNANCE.md`、`CONTRIBUTING.md`、`SECURITY.md` 为准。
 - 涉及交易安全的 issue，优先使用：
   - `type/bug`
   - `type/incident`
   - `area/ops`
   - `area/architecture`
+
+issue 层级固定为：
+
+- `Epic -> Tracking Parent Issue -> Child Implementation Issue`
+
+执行规则：
+
+- 不允许直接从 epic 开始编码。
+- 不允许直接从 tracking parent issue 开始编码。
+- 只允许从 `type/task` issue 直接派发 subagent。
+- 一个 subagent 一次只处理一个 child issue。
+- 如果 child issue 的边界不够，需要先开新 sibling issue，而不是直接扩 scope。
+- child 关完后再关 tracking parent；tracking parent 关完后再关 epic。
+- 详细映射见 `docs/roadmap/ISSUE_HIERARCHY.md`。
 
 ## 10. 默认工作方式
 
