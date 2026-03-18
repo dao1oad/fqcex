@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  governance-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify governance files
+        run: |
+          test -f README.md
+          test -f docs/roadmap/ROADMAP.md
+          test -f docs/architecture/ARCHITECTURE.md
+          test -f docs/architecture/STATE_MACHINE.md
+          test -f docs/architecture/DATA_MODEL.md
+          test -f docs/decisions/PHASE1_FREEZE.md
+          test -f .github/PULL_REQUEST_TEMPLATE.md
