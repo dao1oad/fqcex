@@ -24,7 +24,7 @@
 
 - 仓库治理骨架已建立，包含 `GOVERNANCE.md`、`CONTRIBUTING.md`、`SECURITY.md`。
 - GitHub 侧已建立 roadmap milestones、labels、epics 和首批 issues。
-- `main` 分支保留治理与文档基础。
+- `main` 分支已包含治理基础和项目记忆系统。
 - `codex/ci-cd-bootstrap` 分支已实现 CI/CD、Playwright smoke 和自动部署骨架，但尚未合并到 `main`。
 - `codex/perp-platform-bootstrap` 分支已建立最小应用骨架，但尚未合并到 `main`。
 

@@ -33,6 +33,41 @@ def safe_run_command(repo_root: Path, *args: str) -> CompletedProcess[str]:
         return CompletedProcess(args=args, returncode=127, stdout="", stderr=str(error))
 
 
+def resolve_github_repo(repo_root: Path) -> str | None:
+    result = safe_run_command(
+        repo_root,
+        "gh",
+        "repo",
+        "view",
+        "--json",
+        "nameWithOwner",
+        "--jq",
+        ".nameWithOwner",
+    )
+    if result.returncode == 0:
+        repo_slug = result.stdout.strip()
+        return repo_slug or None
+    return None
+
+
+def get_remote_branches(repo_root: Path) -> CompletedProcess[str]:
+    repo_slug = resolve_github_repo(repo_root)
+    if repo_slug:
+        branches = safe_run_command(
+            repo_root,
+            "gh",
+            "api",
+            f"repos/{repo_slug}/branches",
+            "--paginate",
+            "--jq",
+            ".[].name",
+        )
+        if branches.returncode == 0:
+            return branches
+
+    return safe_run_command(repo_root, "git", "branch", "--remotes", "--format=%(refname:short)")
+
+
 def build_snapshot(repo_root: Path) -> str:
     current_branch = safe_run_command(
         repo_root,
@@ -45,7 +80,7 @@ def build_snapshot(repo_root: Path) -> str:
         ":(exclude)docs/memory/generated/project_snapshot.md",
     )
     local_branches = safe_run_command(repo_root, "git", "branch", "--format=%(refname:short)")
-    remote_branches = safe_run_command(repo_root, "git", "branch", "--remotes", "--format=%(refname:short)")
+    remote_branches = get_remote_branches(repo_root)
     worktrees = safe_run_command(repo_root, "git", "worktree", "list")
     recent_commits = safe_run_command(repo_root, "git", "log", "--oneline", "-10")
     issues = safe_run_command(

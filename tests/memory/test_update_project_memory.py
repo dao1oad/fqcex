@@ -71,7 +71,37 @@ def test_update_project_memory_handles_missing_gh_binary(monkeypatch) -> None:
     assert "GitHub metadata unavailable" in content
 
 
-def test_update_project_memory_includes_active_branch_context() -> None:
+def test_update_project_memory_prefers_github_api_for_remote_branches(monkeypatch) -> None:
+    module = load_module()
+
+    def fake_run_command(repo_root: Path, *args: str) -> CompletedProcess[str]:
+        if args[:4] == ("gh", "repo", "view", "--json"):
+            return CompletedProcess(args=args, returncode=0, stdout="dao1oad/fqcex", stderr="")
+        if args[:3] == ("gh", "api", "repos/dao1oad/fqcex/branches"):
+            return CompletedProcess(
+                args=args,
+                returncode=0,
+                stdout="main\ncodex/ci-cd-bootstrap",
+                stderr="",
+            )
+        if args[:3] == ("git", "branch", "--remotes"):
+            return CompletedProcess(
+                args=args,
+                returncode=0,
+                stdout="origin/main\norigin/stale-branch",
+                stderr="",
+            )
+        return CompletedProcess(args=args, returncode=0, stdout="ok", stderr="")
+
+    monkeypatch.setattr(module, "safe_run_command", fake_run_command)
+
+    content = module.build_snapshot(REPO_ROOT)
+
+    assert "main\ncodex/ci-cd-bootstrap" in content
+    assert "origin/stale-branch" not in content
+
+
+def test_update_project_memory_includes_current_repository_context() -> None:
     result = run(
         ["py", str(SCRIPT_PATH)],
         cwd=REPO_ROOT,
@@ -84,7 +114,7 @@ def test_update_project_memory_includes_active_branch_context() -> None:
 
     content = SNAPSHOT_PATH.read_text(encoding="utf-8")
 
-    assert "codex/project-memory-system" in content
+    assert "## main...origin/main" in content
     assert "codex/ci-cd-bootstrap" in content
     assert "Local Branches" in content
     assert "Remote Branches" in content
