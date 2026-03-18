@@ -81,7 +81,7 @@ Every PR that affects runtime, supervisor, recovery, data truth, or runbooks mus
 - `type/epic` and `type/tracking` issues are not direct coding entrypoints
 - tracking parents close only after all child issues close
 - epics close only after all tracking parents close
-- GitHub issue titles and bodies should default to Simplified Chinese; keep English only for paths, commands, labels, and necessary technical terms
+- GitHub issue 的标题、正文、进展更新、关闭说明默认使用简体中文；仅文件路径、命令、标签名和必要技术术语保留英文
 - the detailed issue tree and execution rules live in `docs/roadmap/ISSUE_HIERARCHY.md`
 
 ## 7. Subagent Execution Rules

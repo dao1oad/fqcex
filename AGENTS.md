@@ -131,7 +131,7 @@ Phase 1 明确不做：
 - tracking parent issue 使用 `type/tracking`。
 - child implementation issue 使用 `type/task`。
 - child issue 必须在正文中同时引用所属 tracking parent 和 epic。
-- GitHub issue 标题与正文默认使用中文；文件路径、命令、标签名和必要技术术语可保留英文。
+- GitHub issue 的标题、正文、进展更新、关闭说明默认使用中文；文件路径、命令、标签名和必要技术术语可保留英文。
 - 公开仓库的协作和披露规则分别以 `GOVERNANCE.md`、`CONTRIBUTING.md`、`SECURITY.md` 为准。
 - 涉及交易安全的 issue，优先使用：
   - `type/bug`

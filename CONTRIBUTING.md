@@ -67,7 +67,7 @@ Rules:
 - do not start coding directly from an epic or tracking issue
 - one PR should usually close one `type/task` issue
 - if implementation scope expands, open a new sibling `type/task` issue rather than silently broadening the current one
-- issue titles and bodies should default to Simplified Chinese; keep English only for paths, commands, labels, and necessary technical terms
+- issue 标题、正文、进展更新、关闭说明默认使用简体中文；仅文件路径、命令、标签名和必要技术术语保留英文
 
 Reference:
 
