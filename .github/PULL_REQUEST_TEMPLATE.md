@@ -6,6 +6,24 @@
 
 ## Verification
 
+## Review Evidence
+
+Issue:
+
+Base SHA:
+
+Head SHA:
+
+Reviewed Scope:
+
+Review Method:
+
+Findings:
+
+Resolution:
+
+Final Verification:
+
 ## Docs Updated
 
 - [ ] README
@@ -20,3 +38,4 @@
 - [ ] Affects recovery
 - [ ] Affects risk or tradeability
 - [ ] Affects operator procedures
+- [ ] Added independent review comment

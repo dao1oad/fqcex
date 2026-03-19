@@ -53,6 +53,36 @@ For safety-critical changes, include:
 - recovery impact
 - runbook impact
 
+## Review Requirements
+
+Every `type/task` PR must include `Review Evidence` before merge.
+
+`Review Evidence` must include:
+
+- child issue reference
+- `Base SHA`
+- `Head SHA`
+- reviewed scope
+- review method
+- findings
+- findings resolution
+- final verification commands and results
+
+In the current single-account phase, review evidence is only valid when both exist:
+
+- the `Review Evidence` section in the PR body
+- one additional independent review comment on the PR
+
+No PR should merge without review evidence.
+No child issue should close without review evidence linked from the merged PR.
+
+Current required check names are:
+
+- `governance-check`
+- `python-check`
+
+`python-check` is reserved for the minimal Python CI guardrail and does not cover Docker, smoke, or deploy verification.
+
 ## Issue Hierarchy
 
 This repository uses a three-level backlog:
