@@ -34,3 +34,5 @@ def test_codex_cloud_dry_run_runbook_exists_with_record_section() -> None:
     assert "PR URL" in content
     assert "Trigger Comment URL" in content
     assert "Codex Response URL" in content
+    assert "create an environment for this repo" in content
+    assert "https://chatgpt.com/codex/settings/environments" in content

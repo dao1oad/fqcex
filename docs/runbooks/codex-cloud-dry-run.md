@@ -7,10 +7,13 @@
 ## 先决条件
 
 - 仓库已配置 Codex cloud environment
+- `dao1oad/fqcex` 已在 Codex settings 中创建 repo environment：`https://chatgpt.com/codex/settings/environments`
 - `scripts/codex_cloud_setup.sh` 可用于 Linux/Bash setup
 - cloud environment / secrets / network 约束已按 `docs/runbooks/codex-cloud-security.md` 配置
 - orchestrator 已支持 portable dispatch pack 和 `accept --dispatch-path`
 - 当前任务属于文档、测试、静态校验或 bounded code-change 范围
+
+如果 GitHub PR 上的 `@codex` 回复提示 `create an environment for this repo`，说明仓库尚未完成这一前置配置，后续 child issue 仍不能正式切到云端执行。
 
 ## 触发入口
 
@@ -51,13 +54,27 @@
 3. 优先检查 Codex cloud / GitHub integration 设置
 4. 必要时回退到本地执行，直到 dry run 打通
 
+若 Codex 明确返回 `create an environment for this repo`：
+
+1. 打开 `https://chatgpt.com/codex/settings/environments`
+2. 为 `dao1oad/fqcex` 创建 cloud environment
+3. 保持 `scripts/codex_cloud_setup.sh` 作为 setup 入口
+4. 回到同一个 PR 重新发送 bounded `@codex ...` comment
+5. 仅在 PR 上拿到可审计响应后，才把后续 child issue 切到云端
+
 ## Dry Run Record
 
 - Date: `2026-03-19`
-- PR URL: `pending`
-- Trigger Comment URL: `pending`
-- Codex Response URL: `pending`
-- Outcome: `pending`
+- PR URL: `https://github.com/dao1oad/fqcex/pull/96`
+- Trigger Comment URL: `https://github.com/dao1oad/fqcex/pull/96#issuecomment-4091391326`
+- Codex Response URL: `https://github.com/dao1oad/fqcex/pull/96#issuecomment-4091392702`
+- Outcome: `blocked - repository environment missing; create Codex cloud environment before retry`
+
+## 当前结论
+
+- GitHub -> Codex comment 触发链路已打通
+- 当前唯一阻塞是仓库缺少 Codex cloud environment
+- 在 environment 创建完成前，不应把 `#32+` child issue 直接切到云端执行
 
 ## 相关文档
 
