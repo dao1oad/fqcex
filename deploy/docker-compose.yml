@@ -1,0 +1,9 @@
+services:
+  perp-platform:
+    image: "${PERP_PLATFORM_IMAGE_REPO}:${PERP_PLATFORM_IMAGE_TAG}"
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    env_file:
+      - .env
+    command: ["python", "-m", "perp_platform"]
