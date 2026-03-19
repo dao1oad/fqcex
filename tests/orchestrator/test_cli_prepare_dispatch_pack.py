@@ -4,6 +4,20 @@ import subprocess
 import sys
 
 
+def expected_worktree_path(repo_root: Path, issue_slug: str) -> str:
+    result = subprocess.run(
+        ["git", "rev-parse", "--git-common-dir"],
+        capture_output=True,
+        text=True,
+        check=True,
+        cwd=repo_root,
+    )
+    common_dir = Path(result.stdout.strip())
+    if not common_dir.is_absolute():
+        common_dir = (repo_root / common_dir).resolve()
+    return str(common_dir.parent / ".worktrees" / issue_slug)
+
+
 def test_prepare_outputs_execution_context_constraints_and_prompt(
     tmp_path: Path,
 ) -> None:
@@ -73,8 +87,8 @@ def test_prepare_outputs_execution_context_constraints_and_prompt(
     payload = json.loads(result.stdout)
     assert payload["execution_context"]["issue_id"] == 30
     assert payload["execution_context"]["tracking_issue_id"] == 11
-    assert payload["worktree_path"] == str(
-        repo_root.parent / "issue-30-doc-constraints"
+    assert payload["worktree_path"] == expected_worktree_path(
+        repo_root, "issue-30-doc-constraints"
     )
     assert payload["constraints"]["escalation_triggers"]
     assert "Do not ask the user for design confirmation." in payload["subagent_prompt"]

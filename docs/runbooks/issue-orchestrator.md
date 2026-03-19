@@ -37,6 +37,7 @@
 
 - `gh sync` 负责把 GitHub issue 元数据规范化到本地 `.codex/orchestrator/issues.json`
 - `start` 负责串联同步、选下一个 ready issue、claim，并输出完整 dispatch pack
+- 对开放的 `type/task` hierarchy drift 必须 `fail closed`
 
 `start` 当前不会自动派发 subagent，也不会自动 merge 或 close issue；这些动作仍由主 agent 会话显式执行。
 

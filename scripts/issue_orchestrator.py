@@ -322,11 +322,15 @@ def main() -> int:
             return 1
 
         approval_bundle = load_approval_bundle(approval_path)
-        snapshots_json = sync_github_issues(
-            hierarchy_path=Path(args.hierarchy_path),
-            output_path=Path(args.output_path),
-            gh_json_path=Path(args.gh_json_path) if args.gh_json_path else None,
-        )
+        try:
+            snapshots_json = sync_github_issues(
+                hierarchy_path=Path(args.hierarchy_path),
+                output_path=Path(args.output_path),
+                gh_json_path=Path(args.gh_json_path) if args.gh_json_path else None,
+            )
+        except ValueError as exc:
+            print(str(exc))
+            return 1
         snapshots = load_issue_snapshots(Path(args.output_path))
         operator = args.operator or detect_current_operator()
         closed_issue_ids = {
@@ -367,11 +371,15 @@ def main() -> int:
 
     if args.command == "gh":
         if args.gh_command == "sync":
-            sync_github_issues(
-                hierarchy_path=Path(args.hierarchy_path),
-                output_path=Path(args.output_path),
-                gh_json_path=Path(args.gh_json_path) if args.gh_json_path else None,
-            )
+            try:
+                sync_github_issues(
+                    hierarchy_path=Path(args.hierarchy_path),
+                    output_path=Path(args.output_path),
+                    gh_json_path=Path(args.gh_json_path) if args.gh_json_path else None,
+                )
+            except ValueError as exc:
+                print(str(exc))
+                return 1
             print("synced")
             return 0
 

@@ -4,6 +4,20 @@ import subprocess
 import sys
 
 
+def expected_worktree_path(repo_root: Path, issue_slug: str) -> str:
+    result = subprocess.run(
+        ["git", "rev-parse", "--git-common-dir"],
+        capture_output=True,
+        text=True,
+        check=True,
+        cwd=repo_root,
+    )
+    common_dir = Path(result.stdout.strip())
+    if not common_dir.is_absolute():
+        common_dir = (repo_root / common_dir).resolve()
+    return str(common_dir.parent / ".worktrees" / issue_slug)
+
+
 def test_start_runs_sync_select_claim_and_prepare(tmp_path: Path) -> None:
     approval_path = tmp_path / "approval_bundle.json"
     gh_json_path = tmp_path / "gh_issues.json"
@@ -86,7 +100,9 @@ def test_start_runs_sync_select_claim_and_prepare(tmp_path: Path) -> None:
     assert result.returncode == 0
     payload = json.loads(result.stdout)
     assert payload["execution_context"]["issue_id"] == 30
-    assert payload["worktree_path"] == str(repo_root.parent / "issue-30-doc-constraints")
+    assert payload["worktree_path"] == expected_worktree_path(
+        repo_root, "issue-30-doc-constraints"
+    )
     state_payload = json.loads(state_path.read_text(encoding="utf-8"))
     assert state_payload["issue_id"] == 30
     assert state_payload["status"] == "claimed"
