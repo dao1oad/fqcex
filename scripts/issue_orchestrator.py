@@ -5,6 +5,13 @@ from datetime import datetime
 import json
 from pathlib import Path
 import subprocess
+import sys
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
 
 from perp_platform.orchestrator.dispatcher import build_dispatch_pack
 from perp_platform.orchestrator.models import ApprovalBundle
@@ -17,8 +24,10 @@ from perp_platform.orchestrator.github_state import (
 )
 from perp_platform.orchestrator.runtime_state import (
     load_approval_bundle,
+    load_dispatch_pack,
     load_state,
     save_approval_bundle,
+    save_dispatch_pack,
     save_state,
 )
 from perp_platform.orchestrator.sequence import select_next_ready_issue
@@ -91,6 +100,9 @@ def build_prepare_output(
     *,
     snapshot,
     approval_bundle: ApprovalBundle,
+    allowed_files: list[str],
+    forbidden_files: list[str],
+    acceptance_checks: list[str],
 ) -> dict[str, object]:
     work_item = snapshot_to_work_item(snapshot)
     issue_slug = f"issue-{work_item.issue_id}-{slugify_issue_title(work_item.issue_title)}"
@@ -102,9 +114,9 @@ def build_prepare_output(
         approval_bundle=approval_bundle,
         branch=branch,
         worktree_path=worktree_path,
-        allowed_files=[],
-        forbidden_files=[],
-        acceptance_checks=[],
+        allowed_files=allowed_files,
+        forbidden_files=forbidden_files,
+        acceptance_checks=acceptance_checks,
     )
 
 
@@ -130,10 +142,15 @@ def main() -> int:
     prepare_parser.add_argument("--issues-path", required=True)
     prepare_parser.add_argument("--approval-path", default=str(DEFAULT_APPROVAL_PATH))
     prepare_parser.add_argument("--operator")
+    prepare_parser.add_argument("--allowed-file", action="append", default=[])
+    prepare_parser.add_argument("--forbidden-file", action="append", default=[])
+    prepare_parser.add_argument("--acceptance-check", action="append", default=[])
+    prepare_parser.add_argument("--dispatch-path")
 
     accept_parser = subparsers.add_parser("accept")
     accept_parser.add_argument("issue_id", type=int)
     accept_parser.add_argument("--state-path", default=".codex/orchestrator/state.json")
+    accept_parser.add_argument("--dispatch-path")
     accept_parser.add_argument("--head-sha", required=True)
     accept_parser.add_argument("--changed-files-path", required=True)
     accept_parser.add_argument("--review-evidence-path", required=True)
@@ -154,6 +171,11 @@ def main() -> int:
     start_parser.add_argument("--gh-json-path")
     start_parser.add_argument("--state-path", default=".codex/orchestrator/state.json")
     start_parser.add_argument("--operator")
+    start_parser.add_argument("--allowed-file", action="append", default=[])
+    start_parser.add_argument("--forbidden-file", action="append", default=[])
+    start_parser.add_argument("--acceptance-check", action="append", default=[])
+    start_parser.add_argument("--dispatch-path")
+    start_parser.add_argument("--skip-state-save", action="store_true")
 
     gh_parser = subparsers.add_parser("gh")
     gh_subparsers = gh_parser.add_subparsers(dest="gh_command", required=True)
@@ -251,25 +273,48 @@ def main() -> int:
         dispatch_pack = build_prepare_output(
             snapshot=snapshot,
             approval_bundle=approval_bundle,
+            allowed_files=args.allowed_file,
+            forbidden_files=args.forbidden_file,
+            acceptance_checks=args.acceptance_check,
         )
+        if args.dispatch_path:
+            save_dispatch_pack(Path(args.dispatch_path), dispatch_pack)
         print(json.dumps(dispatch_pack))
         return 0
 
     if args.command == "accept":
-        work_item = load_state(Path(args.state_path))
+        if args.dispatch_path:
+            dispatch_pack = load_dispatch_pack(Path(args.dispatch_path))
+            acceptance_payload = dispatch_pack.get("acceptance_payload", {})
+            issue_id = acceptance_payload.get(
+                "issue_id", dispatch_pack.get("execution_context", {}).get("issue_id")
+            )
+            allowed_files = tuple(
+                acceptance_payload.get(
+                    "allowed_files",
+                    dispatch_pack.get("constraints", {}).get("allowed_files", []),
+                )
+            )
+            if issue_id != args.issue_id:
+                print("issue mismatch")
+                return 1
+        else:
+            work_item = load_state(Path(args.state_path))
 
-        if work_item.issue_id != args.issue_id:
-            print("issue mismatch")
-            return 1
+            if work_item.issue_id != args.issue_id:
+                print("issue mismatch")
+                return 1
 
-        if work_item.head_sha != args.head_sha:
-            print("head sha mismatch")
-            return 1
+            if work_item.head_sha != args.head_sha:
+                print("head sha mismatch")
+                return 1
+
+            allowed_files = work_item.allowed_files
 
         changed_files = json.loads(
             Path(args.changed_files_path).read_text(encoding="utf-8")
         )
-        if any(changed_file not in work_item.allowed_files for changed_file in changed_files):
+        if any(changed_file not in allowed_files for changed_file in changed_files):
             print("boundary violation")
             return 1
 
@@ -358,14 +403,20 @@ def main() -> int:
             approval_bundle_id=approval_bundle.bundle_id,
             base_sha=claimed_work_item.base_sha,
             head_sha=claimed_work_item.head_sha,
-            allowed_files=claimed_work_item.allowed_files,
+            allowed_files=tuple(args.allowed_file),
             blocker_reason=claimed_work_item.blocker_reason,
         )
-        save_state(Path(args.state_path), claimed_work_item)
+        if not args.skip_state_save:
+            save_state(Path(args.state_path), claimed_work_item)
         dispatch_pack = build_prepare_output(
             snapshot=selected,
             approval_bundle=approval_bundle,
+            allowed_files=args.allowed_file,
+            forbidden_files=args.forbidden_file,
+            acceptance_checks=args.acceptance_check,
         )
+        if args.dispatch_path:
+            save_dispatch_pack(Path(args.dispatch_path), dispatch_pack)
         print(json.dumps(dispatch_pack))
         return 0
 

@@ -12,3 +12,6 @@ def test_issue_orchestrator_runbook_mentions_single_writer_and_gpt_5_4_xhigh() -
     assert "gh sync" in content
     assert "start" in content
     assert "fail closed" in content
+    assert "skip-state-save" in content
+    assert "dispatch-path" in content
+    assert "accept --dispatch-path" in content

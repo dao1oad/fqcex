@@ -41,6 +41,36 @@
 
 `start` 当前不会自动派发 subagent，也不会自动 merge 或 close issue；这些动作仍由主 agent 会话显式执行。
 
+## Cloud Mode
+
+本地模式仍可继续使用 `.codex/orchestrator/state.json` 记录 runtime state。
+
+当主 agent 需要把任务切到 GitHub / cloud task 执行时，推荐使用 portable dispatch pack，而不是依赖当前本机会话的 state 文件。
+
+推荐命令顺序：
+
+1. `approval create`
+2. `gh sync`
+3. `start --skip-state-save --dispatch-path <dispatch.json>`
+4. cloud task 根据 dispatch pack 执行
+5. `accept --dispatch-path <dispatch.json>`
+
+portable dispatch pack 当前至少包含：
+
+- `execution_context`
+- `constraints`
+- `claim_record`
+- `acceptance_payload`
+- `subagent_prompt`
+
+这样 cloud task 只要带回：
+
+- 当前 `head_sha`
+- changed files
+- review evidence
+
+主 agent 就可以在不读取本地旧 `state.json` 的情况下完成 acceptance。
+
 ## 必要并发
 
 - issue 级别严格串行

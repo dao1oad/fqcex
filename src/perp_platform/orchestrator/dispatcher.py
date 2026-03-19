@@ -88,11 +88,34 @@ def build_dispatch_pack(
         ]
     )
 
+    claim_record = {
+        "issue_id": snapshot.issue_id,
+        "issue_title": snapshot.issue_title,
+        "tracking_issue_id": snapshot.tracking_issue_id,
+        "epic_issue_id": snapshot.epic_issue_id,
+        "approval_bundle_id": approval_bundle.bundle_id,
+        "branch": branch,
+        "worktree_path": worktree_path,
+        "allowed_files": allowed_files,
+        "forbidden_files": forbidden_files,
+        "acceptance_checks": acceptance_checks,
+        "model": approval_bundle.model,
+        "reasoning_effort": approval_bundle.reasoning_effort,
+    }
+    acceptance_payload = {
+        "issue_id": snapshot.issue_id,
+        "approval_bundle_id": approval_bundle.bundle_id,
+        "allowed_files": allowed_files,
+        "review_required": True,
+    }
+
     return {
         "branch": branch,
         "worktree_path": worktree_path,
         "owner_payload": owner_payload,
         "execution_context": execution_context,
         "constraints": constraints,
+        "claim_record": claim_record,
+        "acceptance_payload": acceptance_payload,
         "subagent_prompt": subagent_prompt,
     }

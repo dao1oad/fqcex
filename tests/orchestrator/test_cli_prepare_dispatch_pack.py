@@ -74,6 +74,12 @@ def test_prepare_outputs_execution_context_constraints_and_prompt(
             str(issues_path),
             "--approval-path",
             str(approval_path),
+            "--allowed-file",
+            "src/perp_platform/orchestrator/dispatcher.py",
+            "--forbidden-file",
+            "src/perp_platform/runtime/bybit/bootstrap.py",
+            "--acceptance-check",
+            "py -m pytest tests/orchestrator/test_cli_prepare_dispatch_pack.py -q",
             "--operator",
             "dao1oad",
         ],
@@ -90,6 +96,23 @@ def test_prepare_outputs_execution_context_constraints_and_prompt(
     assert payload["worktree_path"] == expected_worktree_path(
         repo_root, "issue-30-doc-constraints"
     )
+    assert payload["claim_record"]["issue_id"] == 30
+    assert payload["claim_record"]["allowed_files"] == [
+        "src/perp_platform/orchestrator/dispatcher.py"
+    ]
+    assert payload["acceptance_payload"]["issue_id"] == 30
+    assert payload["acceptance_payload"]["allowed_files"] == [
+        "src/perp_platform/orchestrator/dispatcher.py"
+    ]
+    assert payload["constraints"]["allowed_files"] == [
+        "src/perp_platform/orchestrator/dispatcher.py"
+    ]
+    assert payload["constraints"]["forbidden_files"] == [
+        "src/perp_platform/runtime/bybit/bootstrap.py"
+    ]
+    assert payload["constraints"]["acceptance_checks"] == [
+        "py -m pytest tests/orchestrator/test_cli_prepare_dispatch_pack.py -q"
+    ]
     assert payload["constraints"]["escalation_triggers"]
     assert "Do not ask the user for design confirmation." in payload["subagent_prompt"]
 
