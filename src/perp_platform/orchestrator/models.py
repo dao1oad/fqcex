@@ -60,3 +60,18 @@ class ApprovalBundle:
     recommended_defaults: tuple[str, ...]
     model: str
     reasoning_effort: str
+
+
+@dataclass(frozen=True)
+class IssueSnapshot:
+    issue_id: int
+    issue_title: str
+    tracking_issue_id: int
+    epic_issue_id: int
+    sequence_index: int
+    state: str
+    type_label: str
+    phase_labels: tuple[str, ...]
+    area_labels: tuple[str, ...]
+    assignees: tuple[str, ...]
+    body: str
