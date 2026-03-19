@@ -1,6 +1,6 @@
 # Project Snapshot
 
-Generated: 2026-03-18T16:32:34.761438+00:00
+Generated: 2026-03-19T01:45:14.246474+00:00
 Repository Root: `D:\fqcex`
 
 ## Current Branch
@@ -12,7 +12,6 @@ Repository Root: `D:\fqcex`
 ```text
 codex/ci-cd-bootstrap
 codex/governance-public-rules
-codex/issue-review-20260318
 codex/perp-platform-bootstrap
 main
 ```
@@ -26,24 +25,23 @@ main
 
 ## Worktrees
 ```text
-D:/fqcex                                    9122cd0 [main]
+D:/fqcex                                    532a102 [main]
 D:/fqcex/.worktrees/ci-cd-bootstrap         19a8561 [codex/ci-cd-bootstrap]
-D:/fqcex/.worktrees/issue-review-20260318   fd6dccf [codex/issue-review-20260318]
 D:/fqcex/.worktrees/perp-platform-bootstrap 575f66e [codex/perp-platform-bootstrap]
 ```
 
 ## Recent Commits
 ```text
-9122cd0 docs: refresh project snapshot after issue review
-fd6dccf docs: align backlog review and fix memory snapshot test
-78e46a2 docs: require chinese for issue lifecycle updates
-d756fd0 docs: localize issue governance to chinese
-64d79a1 docs: refine issue hierarchy and governance rules
-2b7f8ac docs: refresh project snapshot
-efe0f35 fix: refresh project memory state handling
-35af1aa Merge pull request #24 from dao1oad/codex/project-memory-system
-1b6a034 docs: add initial project snapshot
-a24037f feat: add repository memory system
+532a102 merge: issue #27 shared test foundation
+3feb630 merge: issue #26 config bootstrap contract
+569e16d merge: issue #25 perp-platform package entrypoint
+cba6e02 test: add shared perp-platform test foundation
+3e641de docs: add issue 27 design and plan
+cac3ca8 feat: add config bootstrap contract
+5fe60f1 docs: add issue 26 design and plan
+8dc5c2f feat: add perp-platform package entrypoint
+a33647b docs: add issue 25 design and plan
+88f4a74 docs: refresh project snapshot on synced main
 ```
 
 ## Repository Docs

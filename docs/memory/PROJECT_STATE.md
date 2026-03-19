@@ -25,6 +25,10 @@
 - 仓库治理骨架已建立，包含 `GOVERNANCE.md`、`CONTRIBUTING.md`、`SECURITY.md`。
 - GitHub 侧已建立 roadmap milestones、labels、epics 和首批 issues。
 - `main` 分支已包含治理基础和项目记忆系统。
+- `main` 分支已按 issue 顺序合入 `#25-#27`：
+  - 建立 `perp_platform` 最小 Python 包与模块入口
+  - 建立最小配置初始化契约 `AppConfig` / `load_config()`
+  - 建立共享测试基座 `tests/perp_platform/support`
 - GitHub issue 树已补齐 `#79-#83`，用于承接 Phase 1 的 worktree/CI/部署基座缺口。
 - GitHub issue 树已补齐 `#84-#88`，用于承接 Phase 4 的审计留痕设计缺口。
 - `codex/ci-cd-bootstrap` 分支仍有 2 个未合并提交，但基于旧基线；当前应作为 `#79-#83` 的参考来源，而不是直接合并目标。
