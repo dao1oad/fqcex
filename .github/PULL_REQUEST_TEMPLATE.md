@@ -24,6 +24,16 @@ Resolution:
 
 Final Verification:
 
+## Codex Cloud Evidence
+
+Dry Run PR URL:
+
+Trigger Comment URL:
+
+Codex Response URL:
+
+Outcome:
+
 ## Docs Updated
 
 - [ ] README

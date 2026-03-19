@@ -83,6 +83,28 @@ Current required check names are:
 
 `python-check` is reserved for the minimal Python CI guardrail and does not cover Docker, smoke, or deploy verification.
 
+## Codex Cloud Workflow
+
+After the Codex cloud migration issues are complete, subsequent `type/task` issues should default to a PR-based Codex cloud workflow instead of local direct-to-main execution.
+
+Recommended flow:
+
+1. create a branch for the child issue
+2. push the branch and open a PR
+3. leave a bounded GitHub PR comment using `@codex ...`
+4. use `@codex review` for code review requests
+5. use a non-review `@codex` comment to start a Codex cloud task
+6. record the trigger comment URL, Codex response URL, review evidence, and verification before merge
+
+Codex cloud tasks for this repository remain limited by the existing cloud security boundary:
+
+- no real exchange credentials
+- no real exchange API access
+- no production deploys
+- no bypass of issue order or review evidence rules
+
+If a task cannot stay within those limits, keep it local or behind explicit human approval instead of forcing it into Codex cloud.
+
 ## Issue Hierarchy
 
 This repository uses a three-level backlog:
