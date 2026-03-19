@@ -1,0 +1,94 @@
+# Codex Cloud Dry Run Runbook
+
+## 目标
+
+用一次可审计的 GitHub -> Codex cloud dry run，验证本仓库已经可以把后续 child issue 从本地执行切换到云端执行，同时不突破 `#91`、`#92`、`#93` 已冻结的 setup、安全和 orchestrator 边界。
+
+## 先决条件
+
+- 仓库已配置 Codex cloud environment
+- `dao1oad/fqcex` 已在 Codex settings 中创建 repo environment：`https://chatgpt.com/codex/settings/environments`
+- `scripts/codex_cloud_setup.sh` 可用于 Linux/Bash setup
+- cloud environment / secrets / network 约束已按 `docs/runbooks/codex-cloud-security.md` 配置
+- orchestrator 已支持 portable dispatch pack 和 `accept --dispatch-path`
+- 当前任务属于文档、测试、静态校验或 bounded code-change 范围
+
+如果 GitHub PR 上的 `@codex` 回复提示 `create an environment for this repo`，说明仓库尚未完成这一前置配置，后续 child issue 仍不能正式切到云端执行。
+
+## 触发入口
+
+在 GitHub PR 上触发 Codex：
+
+- `@codex review`：请求 Codex review 当前 PR
+- 非 `review` 的 `@codex ...` comment：启动一个 Codex cloud task
+
+如果需要直接验证 environment 是否已经可运行，也可以使用本地 Codex CLI 触发一个 bounded cloud task：
+
+```bash
+codex cloud exec --env <ENV_ID> --branch <BRANCH> "<BOUNDED_PROMPT>"
+```
+
+推荐 dry run comment：
+
+```text
+@codex summarize the cloud handoff in this PR and confirm whether later child issues can be executed in Codex cloud using the documented workflow. Do not make code changes.
+```
+
+## 操作步骤
+
+1. 从对应 `type/task` issue 创建分支
+2. 推送分支并打开 PR
+3. 在 PR comment 中留下 bounded `@codex ...` 请求
+4. 等待 Codex 回复或 review
+5. 记录 PR URL、Trigger Comment URL、Codex Response URL 和 outcome
+6. 如 dry run 成功，把 evidence 写回 PR 和仓库文档
+7. 如 dry run 失败，按失败处置回退到本地执行或人工排障
+
+## 失败处置
+
+以下情况都视为 dry run 失败：
+
+- `@codex` comment 没有触发任何响应
+- Codex 明确提示仓库未接入或 environment 不可用
+- Codex 请求真实交易凭证或越过 cloud security boundary
+- Codex task 无法在 PR 上产出可审计结果
+
+失败时执行：
+
+1. 不把后续 issue 直接切到云端
+2. 保留 PR、comment 和日志链接
+3. 优先检查 Codex cloud / GitHub integration 设置
+4. 必要时回退到本地执行，直到 dry run 打通
+
+若 Codex 明确返回 `create an environment for this repo`：
+
+1. 打开 `https://chatgpt.com/codex/settings/environments`
+2. 为 `dao1oad/fqcex` 创建 cloud environment
+3. 保持 `scripts/codex_cloud_setup.sh` 作为 setup 入口
+4. 回到同一个 PR 重新发送 bounded `@codex ...` comment
+5. 仅在 PR 上拿到可审计响应后，才把后续 child issue 切到云端
+
+## Dry Run Record
+
+- Attempt 1 Date: `2026-03-19`
+- Attempt 1 PR URL: `https://github.com/dao1oad/fqcex/pull/96`
+- Attempt 1 Trigger Comment URL: `https://github.com/dao1oad/fqcex/pull/96#issuecomment-4091391326`
+- Attempt 1 Codex Response URL: `https://github.com/dao1oad/fqcex/pull/96#issuecomment-4091392702`
+- Attempt 1 Outcome: `blocked - repository environment missing; create Codex cloud environment before retry`
+- Attempt 2 Date: `2026-03-20`
+- Attempt 2 Task URL: `https://chatgpt.com/codex/tasks/task_e_69bc2cec1698832aa76895df6c301f2d`
+- Attempt 2 Entry: `codex cloud exec --env <ENV_ID> --branch codex/issue-94-cloud-dry-run "<BOUNDED_PROMPT>"`
+- Attempt 2 Outcome: `success - cloud task created for dao1oad/fqcex and reached ready with no diff`
+
+## 当前结论
+
+- GitHub -> Codex comment 触发链路已打通
+- `dao1oad/fqcex` 已具备可用的 Codex cloud environment
+- 已成功创建一次 bounded Codex cloud task，说明仓库已经可以切到云端执行
+- 后续 child issue 可以优先使用 PR + Codex cloud，必要时可用 `codex cloud exec` 直接验证 environment 可用性
+
+## 相关文档
+
+- [Codex Cloud Setup](codex-cloud-setup.md)
+- [Codex Cloud Security](codex-cloud-security.md)
+- [Issue Orchestrator Runbook](issue-orchestrator.md)
