@@ -167,8 +167,9 @@ issue 层级固定为：
 1. `docs/memory/PROJECT_STATE.md`
 2. `docs/memory/ACTIVE_WORK.md`
 3. `docs/memory/SESSION_HANDOFF.md`
-4. `py scripts/update_project_memory.py`
-5. `docs/memory/generated/project_snapshot.md`
-6. `powershell -ExecutionPolicy Bypass -File scripts/project_context.ps1`
+4. `python scripts/update_project_memory.py`
+5. 如需 Linux/Bash 或 Codex cloud 仓库 setup，运行 `bash scripts/codex_cloud_setup.sh`
+6. `docs/memory/generated/project_snapshot.md`
+7. 可选运行 `powershell -ExecutionPolicy Bypass -File scripts/project_context.ps1`（Windows-only）
 
-如果当前工作涉及分支状态、最近提交、open issues / PR 或 worktree，先运行 `scripts/update_project_memory.py` 再继续分析。
+如果当前工作涉及分支状态、最近提交、open issues / PR 或 worktree，先运行 `python scripts/update_project_memory.py` 再继续分析。

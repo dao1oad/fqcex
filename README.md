@@ -34,6 +34,27 @@ Private repository for a perpetual futures connection platform focused on multi-
 - `python-check` runs the full suite with `python -m pytest tests -q`.
 - Docker, smoke, and deploy checks remain out of this minimal CI scope.
 
+## Codex Cloud / Linux-Bash Setup
+
+Use the Linux/Bash-compatible repository setup entry point:
+
+```bash
+bash scripts/codex_cloud_setup.sh
+```
+
+The canonical verification command for Codex cloud and Linux/Bash environments is:
+
+```bash
+python -m pytest tests -q
+```
+
+For manual setup without the helper script:
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -e .
+```
+
 ## Docs
 
 - Roadmap: [docs/roadmap/ROADMAP.md](docs/roadmap/ROADMAP.md)
@@ -45,6 +66,7 @@ Private repository for a perpetual futures connection platform focused on multi-
 - Project state: [docs/memory/PROJECT_STATE.md](docs/memory/PROJECT_STATE.md)
 - Active work: [docs/memory/ACTIVE_WORK.md](docs/memory/ACTIVE_WORK.md)
 - Session handoff: [docs/memory/SESSION_HANDOFF.md](docs/memory/SESSION_HANDOFF.md)
+- Codex cloud setup: [docs/runbooks/codex-cloud-setup.md](docs/runbooks/codex-cloud-setup.md)
 - Governance: [GOVERNANCE.md](GOVERNANCE.md)
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
 - Security: [SECURITY.md](SECURITY.md)
@@ -55,5 +77,6 @@ Private repository for a perpetual futures connection platform focused on multi-
 
 1. 先读 `docs/memory/PROJECT_STATE.md`
 2. 再读 `docs/memory/ACTIVE_WORK.md`
-3. 然后运行 `py scripts/update_project_memory.py`
-4. 如需终端快速概览，运行 `powershell -ExecutionPolicy Bypass -File scripts/project_context.ps1`
+3. 然后运行 `python scripts/update_project_memory.py`
+4. 如需 Linux/Bash 下完整验证，可运行 `python -m pytest tests -q`
+5. 如需终端快速概览，可选运行 `powershell -ExecutionPolicy Bypass -File scripts/project_context.ps1`（Windows-only）
