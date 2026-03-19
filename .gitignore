@@ -10,6 +10,9 @@ dist/
 build/
 *.log
 *.jsonl
+node_modules/
+playwright-report/
+test-results/
 
 # Editors and OS
 .idea/

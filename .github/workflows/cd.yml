@@ -1,0 +1,23 @@
+name: CD
+
+on:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare deploy env
+        run: cp deploy/.env.example deploy/.env
+      - name: Run deploy smoke
+        run: bash deploy/scripts/deploy.sh
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install node dependencies
+        run: npm ci
+      - name: Install Playwright browser
+        run: npx playwright install chromium
+      - name: Run smoke spec
+        run: npx playwright test tests/e2e/smoke.spec.ts
