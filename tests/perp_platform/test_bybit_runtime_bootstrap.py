@@ -59,3 +59,6 @@ def test_bootstrap_bybit_runtime_returns_stable_result() -> None:
     assert result.runtime_config.category == "linear"
     assert result.runtime_config.settle_coin == "USDT"
     assert result.runtime_config.rest_base_url == "https://api-testnet.bybit.com"
+    assert result.runtime.public_stream.channel == "public"
+    assert result.runtime.public_stream.url == "wss://stream-testnet.bybit.com/v5/public/linear"
+    assert result.runtime.execution_client.rest_base_url == "https://api-testnet.bybit.com"
