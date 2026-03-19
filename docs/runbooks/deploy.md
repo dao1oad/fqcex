@@ -1,0 +1,67 @@
+# 部署 Runbook
+
+## 前置条件
+
+- 已安装 `docker`
+- 已安装 `docker compose`
+- 仓库内容已同步到目标主机
+- 已准备 `deploy/.env`
+- 已记录可回退的上一个 `PERP_PLATFORM_IMAGE_TAG`
+
+## 环境变量
+
+从 `deploy/.env.example` 复制到 `deploy/.env`，并至少确认以下变量：
+
+- `PERP_PLATFORM_APP_NAME`
+- `PERP_PLATFORM_ENVIRONMENT`
+- `PERP_PLATFORM_LOG_LEVEL`
+- `PERP_PLATFORM_IMAGE_REPO`
+- `PERP_PLATFORM_IMAGE_TAG`
+
+当前 runbook 只覆盖单机、单环境、单服务启动，不包含交易所密钥或多账户部署策略。
+
+## Bootstrap 步骤
+
+运行：
+
+```sh
+deploy/scripts/bootstrap-server.sh
+```
+
+该脚本会：
+
+- 检查 `docker` 是否可用
+- 检查 `docker compose` 是否可用
+- 创建 `deploy/state`
+- 校验 `deploy/.env` 是否存在
+
+## 部署步骤
+
+运行：
+
+```sh
+deploy/scripts/deploy.sh
+```
+
+该脚本会：
+
+- 调用 `deploy/scripts/bootstrap-server.sh`
+- 执行 `docker compose --env-file deploy/.env -f deploy/docker-compose.yml build`
+- 执行 `docker compose --env-file deploy/.env -f deploy/docker-compose.yml run --rm perp-platform`
+
+## 成功信号
+
+最小成功信号是容器完成启动并以退出码 `0` 结束，标准输出包含类似：
+
+```text
+perp-platform bootstrap ready [dev]
+```
+
+环境名取决于 `PERP_PLATFORM_ENVIRONMENT`。
+
+## 失败处理前置说明
+
+- 若 `bootstrap-server.sh` 失败，先修复本机 Docker 或 `deploy/.env`
+- 若镜像构建失败，保留失败日志并回到上一个可用 `PERP_PLATFORM_IMAGE_TAG`
+- 若容器运行失败，不继续做 smoke 或交易相关动作
+- 真正的 rollback 脚本与详细回退步骤在后续 `#83` 中补齐
