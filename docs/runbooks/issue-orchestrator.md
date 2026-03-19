@@ -25,6 +25,21 @@
 - subagent 收到已批准的推荐方案后直接执行，不再重复向用户确认普通实现分歧
 - 只有命中治理、架构、范围或冻结边界冲突时，subagent 才回主 agent 请求新决策
 
+## 第二阶段入口
+
+主 agent 当前推荐启动顺序：
+
+1. `approval create`
+2. `gh sync`
+3. `start`
+
+其中：
+
+- `gh sync` 负责把 GitHub issue 元数据规范化到本地 `.codex/orchestrator/issues.json`
+- `start` 负责串联同步、选下一个 ready issue、claim，并输出完整 dispatch pack
+
+`start` 当前不会自动派发 subagent，也不会自动 merge 或 close issue；这些动作仍由主 agent 会话显式执行。
+
 ## 必要并发
 
 - issue 级别严格串行
@@ -47,3 +62,13 @@
 - changed files 落在允许边界内
 - review evidence 已存在
 - 需要的治理文档已更新
+
+## Dispatch Pack
+
+`prepare` 和 `start` 当前都会输出：
+
+- `execution_context`
+- `constraints`
+- `subagent_prompt`
+
+该输出用于直接驱动 `gpt-5.4` / `xhigh` subagent，但主 agent 仍保留最终 acceptance 和 merge 决策权。

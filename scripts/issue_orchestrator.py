@@ -4,13 +4,16 @@ import argparse
 from datetime import datetime
 import json
 from pathlib import Path
+import subprocess
 
-from perp_platform.orchestrator.dispatcher import build_owner_dispatch_payload
+from perp_platform.orchestrator.dispatcher import build_dispatch_pack
 from perp_platform.orchestrator.models import ApprovalBundle
 from perp_platform.orchestrator.github_state import (
-    find_claimable_task_work_item,
-    find_task_work_item,
+    find_claimable_issue_snapshot,
     load_task_work_items,
+    load_issue_snapshots,
+    snapshot_to_work_item,
+    sync_github_issues,
 )
 from perp_platform.orchestrator.runtime_state import (
     load_approval_bundle,
@@ -19,9 +22,12 @@ from perp_platform.orchestrator.runtime_state import (
     save_state,
 )
 from perp_platform.orchestrator.sequence import select_next_ready_issue
+from perp_platform.orchestrator.sequence import select_next_ready_snapshot
 
 
 DEFAULT_APPROVAL_PATH = Path(".codex/orchestrator/approval_bundle.json")
+DEFAULT_ISSUES_PATH = Path(".codex/orchestrator/issues.json")
+DEFAULT_HIERARCHY_PATH = Path("docs/roadmap/ISSUE_HIERARCHY.md")
 
 
 def slugify_issue_title(issue_title: str) -> str:
@@ -56,6 +62,52 @@ def build_default_approval_bundle(issue_start: int, issue_end: int) -> ApprovalB
     )
 
 
+def detect_current_operator() -> str:
+    result = subprocess.run(
+        ["gh", "api", "user", "--jq", ".login"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        return ""
+    return result.stdout.strip()
+
+
+def get_worktree_base_dir() -> Path:
+    result = subprocess.run(
+        ["git", "rev-parse", "--git-common-dir"],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    common_dir = Path(result.stdout.strip())
+    if not common_dir.is_absolute():
+        common_dir = (Path.cwd() / common_dir).resolve()
+    return common_dir.parent / ".worktrees"
+
+
+def build_prepare_output(
+    *,
+    snapshot,
+    approval_bundle: ApprovalBundle,
+) -> dict[str, object]:
+    work_item = snapshot_to_work_item(snapshot)
+    issue_slug = f"issue-{work_item.issue_id}-{slugify_issue_title(work_item.issue_title)}"
+    branch = f"codex/{issue_slug}"
+    worktree_path = str(get_worktree_base_dir() / issue_slug)
+    return build_dispatch_pack(
+        snapshot=snapshot,
+        work_item=work_item,
+        approval_bundle=approval_bundle,
+        branch=branch,
+        worktree_path=worktree_path,
+        allowed_files=[],
+        forbidden_files=[],
+        acceptance_checks=[],
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -65,16 +117,19 @@ def main() -> int:
 
     next_parser = subparsers.add_parser("next")
     next_parser.add_argument("--issues-path", required=True)
+    next_parser.add_argument("--operator")
 
     claim_parser = subparsers.add_parser("claim")
     claim_parser.add_argument("issue_id", type=int)
     claim_parser.add_argument("--issues-path", required=True)
     claim_parser.add_argument("--state-path", default=".codex/orchestrator/state.json")
+    claim_parser.add_argument("--operator")
 
     prepare_parser = subparsers.add_parser("prepare")
     prepare_parser.add_argument("issue_id", type=int)
     prepare_parser.add_argument("--issues-path", required=True)
     prepare_parser.add_argument("--approval-path", default=str(DEFAULT_APPROVAL_PATH))
+    prepare_parser.add_argument("--operator")
 
     accept_parser = subparsers.add_parser("accept")
     accept_parser.add_argument("issue_id", type=int)
@@ -91,6 +146,22 @@ def main() -> int:
     close_parser = subparsers.add_parser("close")
     close_parser.add_argument("issue_id", type=int)
     close_parser.add_argument("--state-path", default=".codex/orchestrator/state.json")
+
+    start_parser = subparsers.add_parser("start")
+    start_parser.add_argument("--approval-path", default=str(DEFAULT_APPROVAL_PATH))
+    start_parser.add_argument("--hierarchy-path", default=str(DEFAULT_HIERARCHY_PATH))
+    start_parser.add_argument("--output-path", default=str(DEFAULT_ISSUES_PATH))
+    start_parser.add_argument("--gh-json-path")
+    start_parser.add_argument("--state-path", default=".codex/orchestrator/state.json")
+    start_parser.add_argument("--operator")
+
+    gh_parser = subparsers.add_parser("gh")
+    gh_subparsers = gh_parser.add_subparsers(dest="gh_command", required=True)
+
+    gh_sync_parser = gh_subparsers.add_parser("sync")
+    gh_sync_parser.add_argument("--hierarchy-path", default=str(DEFAULT_HIERARCHY_PATH))
+    gh_sync_parser.add_argument("--output-path", default=str(DEFAULT_ISSUES_PATH))
+    gh_sync_parser.add_argument("--gh-json-path")
 
     approval_parser = subparsers.add_parser("approval")
     approval_subparsers = approval_parser.add_subparsers(dest="approval_command", required=True)
@@ -117,8 +188,16 @@ def main() -> int:
         return 0
 
     if args.command == "next":
-        work_items, closed_issue_ids = load_task_work_items(Path(args.issues_path))
-        selected = select_next_ready_issue(work_items, closed_issue_ids)
+        operator = args.operator or detect_current_operator()
+        snapshots = load_issue_snapshots(Path(args.issues_path))
+        closed_issue_ids = {
+            snapshot.issue_id for snapshot in snapshots if snapshot.state == "closed"
+        }
+        selected = select_next_ready_snapshot(
+            snapshots,
+            closed_issue_ids=closed_issue_ids,
+            current_operator=operator,
+        )
 
         if selected is None:
             print("no ready issue")
@@ -128,12 +207,16 @@ def main() -> int:
         return 0
 
     if args.command == "claim":
-        work_item = find_claimable_task_work_item(Path(args.issues_path), args.issue_id)
+        operator = args.operator or detect_current_operator()
+        snapshot = find_claimable_issue_snapshot(
+            Path(args.issues_path), args.issue_id, operator
+        )
 
-        if work_item is None:
+        if snapshot is None:
             print("issue not claimable")
             return 1
 
+        work_item = snapshot_to_work_item(snapshot)
         claimed_work_item = type(work_item)(
             issue_id=work_item.issue_id,
             issue_title=work_item.issue_title,
@@ -150,36 +233,26 @@ def main() -> int:
         return 0
 
     if args.command == "prepare":
-        work_item = find_claimable_task_work_item(Path(args.issues_path), args.issue_id)
+        operator = args.operator or detect_current_operator()
+        snapshot = find_claimable_issue_snapshot(
+            Path(args.issues_path), args.issue_id, operator
+        )
 
-        if work_item is None:
+        if snapshot is None:
             print("issue not claimable")
             return 1
 
+        work_item = snapshot_to_work_item(snapshot)
         approval_bundle = load_approval_bundle(Path(args.approval_path))
         if not (approval_bundle.issue_start <= work_item.issue_id <= approval_bundle.issue_end):
             print("out of approved scope")
             return 1
 
-        issue_slug = f"issue-{work_item.issue_id}-{slugify_issue_title(work_item.issue_title)}"
-        branch = f"codex/{issue_slug}"
-        worktree_path = str(Path.cwd() / ".worktrees" / issue_slug)
-        owner_payload = build_owner_dispatch_payload(
-            work_item=work_item,
+        dispatch_pack = build_prepare_output(
+            snapshot=snapshot,
             approval_bundle=approval_bundle,
-            worktree_path=worktree_path,
-            allowed_files=[],
-            acceptance_checks=[],
         )
-        print(
-            json.dumps(
-                {
-                    "branch": branch,
-                    "worktree_path": worktree_path,
-                    "owner_payload": owner_payload,
-                }
-            )
-        )
+        print(json.dumps(dispatch_pack))
         return 0
 
     if args.command == "accept":
@@ -241,6 +314,66 @@ def main() -> int:
         Path(args.state_path).unlink(missing_ok=True)
         print("closed")
         return 0
+
+    if args.command == "start":
+        approval_path = Path(args.approval_path)
+        if not approval_path.exists():
+            print("missing approval bundle")
+            return 1
+
+        approval_bundle = load_approval_bundle(approval_path)
+        snapshots_json = sync_github_issues(
+            hierarchy_path=Path(args.hierarchy_path),
+            output_path=Path(args.output_path),
+            gh_json_path=Path(args.gh_json_path) if args.gh_json_path else None,
+        )
+        snapshots = load_issue_snapshots(Path(args.output_path))
+        operator = args.operator or detect_current_operator()
+        closed_issue_ids = {
+            snapshot["issue_id"] for snapshot in snapshots_json if snapshot["state"] == "closed"
+        }
+        selected = select_next_ready_snapshot(
+            snapshots,
+            closed_issue_ids=closed_issue_ids,
+            current_operator=operator,
+        )
+        if selected is None:
+            print("no ready issue")
+            return 1
+        if not (approval_bundle.issue_start <= selected.issue_id <= approval_bundle.issue_end):
+            print("out of approved scope")
+            return 1
+
+        claimed_work_item = snapshot_to_work_item(selected)
+        claimed_work_item = type(claimed_work_item)(
+            issue_id=claimed_work_item.issue_id,
+            issue_title=claimed_work_item.issue_title,
+            tracking_issue_id=claimed_work_item.tracking_issue_id,
+            status=type(claimed_work_item.status).CLAIMED,
+            owner_agent_id=claimed_work_item.owner_agent_id,
+            approval_bundle_id=approval_bundle.bundle_id,
+            base_sha=claimed_work_item.base_sha,
+            head_sha=claimed_work_item.head_sha,
+            allowed_files=claimed_work_item.allowed_files,
+            blocker_reason=claimed_work_item.blocker_reason,
+        )
+        save_state(Path(args.state_path), claimed_work_item)
+        dispatch_pack = build_prepare_output(
+            snapshot=selected,
+            approval_bundle=approval_bundle,
+        )
+        print(json.dumps(dispatch_pack))
+        return 0
+
+    if args.command == "gh":
+        if args.gh_command == "sync":
+            sync_github_issues(
+                hierarchy_path=Path(args.hierarchy_path),
+                output_path=Path(args.output_path),
+                gh_json_path=Path(args.gh_json_path) if args.gh_json_path else None,
+            )
+            print("synced")
+            return 0
 
     if args.command == "approval":
         approval_path = Path(args.approval_path)
