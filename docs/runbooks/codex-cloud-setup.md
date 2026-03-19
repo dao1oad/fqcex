@@ -36,4 +36,6 @@ python -m pytest tests/governance -q
 ## Notes
 
 - `scripts/project_context.ps1` 仍可用于本地 Windows 终端快速概览，但它不是 Codex cloud 的默认入口。
-- 本 runbook 只覆盖 setup 与 verification 入口，不覆盖 environment、secrets、网络访问或 orchestrator 云端状态模型。
+- environment、secrets 与网络访问边界见 [codex-cloud-security.md](codex-cloud-security.md)。
+- 两阶段运行模型与默认网络边界见 [../architecture/CODEX_CLOUD_BOUNDARIES.md](../architecture/CODEX_CLOUD_BOUNDARIES.md)。
+- 本 runbook 只覆盖 setup 与 verification 入口，不覆盖 orchestrator 云端状态模型。

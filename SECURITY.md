@@ -33,6 +33,30 @@ Never commit:
 - private logs containing sensitive exchange or account data
 - environment files containing live credentials
 
+## Codex cloud boundary
+
+Never place live venue credentials into Codex cloud environments.
+
+Codex cloud environment variables may persist across the full task, so environment variables must never be used to carry 真实交易凭证.
+
+The `setup script` may use read-only bootstrap secrets, but those secrets must stay limited to dependency installation or read-only artifact fetches and must not grant trading, deploy, operator, or infrastructure access.
+
+The `agent phase` must not receive live credentials or privileged infrastructure access.
+
+The following credentials remain prohibited from Codex cloud task configuration, setup scripts, and agent phase execution:
+
+- exchange API keys
+- exchange secret keys
+- exchange passphrases
+- account identifiers tied to live venues
+- `BYBIT_API_KEY`
+- production database credentials
+- deploy credentials
+- control-plane admin tokens
+- VPN / SSH / bastion credentials
+
+If a task requires any of the above, keep it local or behind explicit human approval instead of moving it into Codex cloud.
+
 ## Public Issue Guidance
 
 If the issue is not sensitive, you may open a public bug or ops issue.

@@ -55,6 +55,21 @@ python -m pip install --upgrade pip
 python -m pip install -e .
 ```
 
+## Codex Cloud Security Boundary
+
+Keep only non-sensitive environment variables such as `PERP_PLATFORM_ENVIRONMENT=test` in Codex cloud environment settings.
+
+Do not place live venue credentials or 真实交易凭证 into Codex cloud environments.
+
+Agent internet access should remain off by default.
+
+Codex cloud work in this repository is limited to docs, tests, static checks, and mock configuration unless a later issue explicitly widens the boundary.
+
+See:
+
+- [docs/runbooks/codex-cloud-security.md](docs/runbooks/codex-cloud-security.md)
+- [docs/architecture/CODEX_CLOUD_BOUNDARIES.md](docs/architecture/CODEX_CLOUD_BOUNDARIES.md)
+
 ## Docs
 
 - Roadmap: [docs/roadmap/ROADMAP.md](docs/roadmap/ROADMAP.md)
@@ -67,6 +82,8 @@ python -m pip install -e .
 - Active work: [docs/memory/ACTIVE_WORK.md](docs/memory/ACTIVE_WORK.md)
 - Session handoff: [docs/memory/SESSION_HANDOFF.md](docs/memory/SESSION_HANDOFF.md)
 - Codex cloud setup: [docs/runbooks/codex-cloud-setup.md](docs/runbooks/codex-cloud-setup.md)
+- Codex cloud security boundaries: [docs/runbooks/codex-cloud-security.md](docs/runbooks/codex-cloud-security.md)
+- Codex cloud execution boundary: [docs/architecture/CODEX_CLOUD_BOUNDARIES.md](docs/architecture/CODEX_CLOUD_BOUNDARIES.md)
 - Governance: [GOVERNANCE.md](GOVERNANCE.md)
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
 - Security: [SECURITY.md](SECURITY.md)
