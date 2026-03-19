@@ -22,6 +22,12 @@
 - `@codex review`：请求 Codex review 当前 PR
 - 非 `review` 的 `@codex ...` comment：启动一个 Codex cloud task
 
+如果需要直接验证 environment 是否已经可运行，也可以使用本地 Codex CLI 触发一个 bounded cloud task：
+
+```bash
+codex cloud exec --env <ENV_ID> --branch <BRANCH> "<BOUNDED_PROMPT>"
+```
+
 推荐 dry run comment：
 
 ```text
@@ -64,17 +70,22 @@
 
 ## Dry Run Record
 
-- Date: `2026-03-19`
-- PR URL: `https://github.com/dao1oad/fqcex/pull/96`
-- Trigger Comment URL: `https://github.com/dao1oad/fqcex/pull/96#issuecomment-4091391326`
-- Codex Response URL: `https://github.com/dao1oad/fqcex/pull/96#issuecomment-4091392702`
-- Outcome: `blocked - repository environment missing; create Codex cloud environment before retry`
+- Attempt 1 Date: `2026-03-19`
+- Attempt 1 PR URL: `https://github.com/dao1oad/fqcex/pull/96`
+- Attempt 1 Trigger Comment URL: `https://github.com/dao1oad/fqcex/pull/96#issuecomment-4091391326`
+- Attempt 1 Codex Response URL: `https://github.com/dao1oad/fqcex/pull/96#issuecomment-4091392702`
+- Attempt 1 Outcome: `blocked - repository environment missing; create Codex cloud environment before retry`
+- Attempt 2 Date: `2026-03-20`
+- Attempt 2 Task URL: `https://chatgpt.com/codex/tasks/task_e_69bc2cec1698832aa76895df6c301f2d`
+- Attempt 2 Entry: `codex cloud exec --env <ENV_ID> --branch codex/issue-94-cloud-dry-run "<BOUNDED_PROMPT>"`
+- Attempt 2 Outcome: `success - cloud task created for dao1oad/fqcex and reached ready with no diff`
 
 ## 当前结论
 
 - GitHub -> Codex comment 触发链路已打通
-- 当前唯一阻塞是仓库缺少 Codex cloud environment
-- 在 environment 创建完成前，不应把 `#32+` child issue 直接切到云端执行
+- `dao1oad/fqcex` 已具备可用的 Codex cloud environment
+- 已成功创建一次 bounded Codex cloud task，说明仓库已经可以切到云端执行
+- 后续 child issue 可以优先使用 PR + Codex cloud，必要时可用 `codex cloud exec` 直接验证 environment 可用性
 
 ## 相关文档
 
