@@ -26,6 +26,14 @@ Private repository for a perpetual futures connection platform focused on multi-
 - Runtime and incident procedures live in `docs/runbooks`
 - Phase freezes live in `docs/decisions`
 
+## CI
+
+- `governance-check` verifies the repository governance baseline files.
+- `python-check` runs on Python `3.12`.
+- `python-check` installs the package with `python -m pip install -e .`.
+- `python-check` runs the full suite with `python -m pytest tests -q`.
+- Docker, smoke, and deploy checks remain out of this minimal CI scope.
+
 ## Docs
 
 - Roadmap: [docs/roadmap/ROADMAP.md](docs/roadmap/ROADMAP.md)
