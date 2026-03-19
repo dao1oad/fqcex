@@ -64,7 +64,33 @@ Every PR that affects runtime, supervisor, recovery, data truth, or runbooks mus
 - verification
 - documentation impact
 
-## 6. Issue and Milestone Rules
+## 6. Review Governance
+
+- every change implemented through a `type/task` issue must leave independent review evidence before merge
+- in the current single-account phase, "independent review evidence" means:
+  - a review step performed after implementation and verification
+  - a dedicated `Review Evidence` section in the PR body
+  - one additional independent review comment on the PR recording the review result
+- no PR should merge without review evidence
+- no child issue should close without review evidence linked from the merge path
+- high-risk changes require complete review evidence, risk, verification, and documentation impact:
+  - state machines
+  - recovery flows
+  - risk rules
+  - tradeability rules
+  - data truth and data model changes
+  - order and position truth logic
+  - `.github`
+  - `docs/adr`
+  - `docs/runbooks`
+  - `docs/architecture`
+  - `src/`
+- emergency or bootstrap changes may bypass the normal PR path only when necessary, but must add review evidence and follow-up documentation immediately after merge
+- required check names are frozen as:
+  - `governance-check`
+  - `python-check`
+
+## 7. Issue and Milestone Rules
 
 - roadmap phases are managed through milestones:
   - `Phase 0` to `Phase 6`
@@ -84,14 +110,14 @@ Every PR that affects runtime, supervisor, recovery, data truth, or runbooks mus
 - GitHub issue 的标题、正文、进展更新、关闭说明默认使用简体中文；仅文件路径、命令、标签名和必要技术术语保留英文
 - the detailed issue tree and execution rules live in `docs/roadmap/ISSUE_HIERARCHY.md`
 
-## 7. Subagent Execution Rules
+## 8. Subagent Execution Rules
 
 - one subagent should own one `type/task` issue at a time
 - if a task grows beyond its stated `Scope`, open a new sibling child issue instead of expanding the original issue
 - PRs should reference the child issue they complete
 - parent issue checklists must be updated as child issues close
 
-## 8. Safety Rules
+## 9. Safety Rules
 
 - public stream anomalies must be able to stop new opens
 - private stream uncertainty must prevent returning to `LIVE`
@@ -99,7 +125,7 @@ Every PR that affects runtime, supervisor, recovery, data truth, or runbooks mus
 - `BLOCKED` requires explicit operator confirmation before resume
 - manual actions must be auditable
 
-## 9. Release Rules
+## 10. Release Rules
 
 - roadmap and governance docs may release independently from code
 - before any small-size live dry run:
@@ -108,7 +134,7 @@ Every PR that affects runtime, supervisor, recovery, data truth, or runbooks mus
   - validation evidence must be recorded
 - phase completion should be reflected with tags or milestone closure
 
-## 10. Public Repository Rules
+## 11. Public Repository Rules
 
 - never commit API keys, exchange secrets, account identifiers, or sensitive logs
 - security-related disclosures should follow `SECURITY.md`

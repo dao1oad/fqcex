@@ -1,5 +1,7 @@
 * @dao1oad
 
+/src/ @dao1oad
+/docs/architecture/ @dao1oad
 /docs/adr/ @dao1oad
 /docs/runbooks/ @dao1oad
 /.github/ @dao1oad
