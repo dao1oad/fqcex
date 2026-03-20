@@ -1,5 +1,11 @@
 """Supervisor state machine public API."""
 
+from .projection import (
+    InstrumentTradeabilityProjection,
+    VenueTradeabilityProjection,
+    project_instrument_tradeability,
+    project_venue_tradeability,
+)
 from .state_machine import (
     SupervisorState,
     SupervisorTransition,
@@ -24,4 +30,8 @@ __all__ = [
     "PUBLIC_RESYNC_LAG_SECONDS",
     "SupervisorTriggerInputs",
     "evaluate_supervisor_triggers",
+    "VenueTradeabilityProjection",
+    "InstrumentTradeabilityProjection",
+    "project_venue_tradeability",
+    "project_instrument_tradeability",
 ]
