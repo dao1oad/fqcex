@@ -18,6 +18,13 @@ from .policies import (
     CheckerReferenceTopOfBook,
     evaluate_checker_policies,
 )
+from .signals import (
+    CHECKER_HEALTHY_REASON,
+    CHECKER_STALE_REASON,
+    CHECKER_TOP_OF_BOOK_DIVERGED_REASON,
+    CheckerSupervisorSignal,
+    build_checker_supervisor_signal,
+)
 
 __all__ = [
     "CheckerBootstrapResult",
@@ -27,10 +34,15 @@ __all__ = [
     "CheckerPolicyResult",
     "CheckerPolicyThresholds",
     "CheckerReferenceTopOfBook",
+    "CheckerSupervisorSignal",
     "CheckerSubscriptionTarget",
     "CheckerTopOfBook",
+    "CHECKER_HEALTHY_REASON",
+    "CHECKER_STALE_REASON",
+    "CHECKER_TOP_OF_BOOK_DIVERGED_REASON",
     "DEFAULT_CHECKER_POLICY_THRESHOLDS",
     "bootstrap_checker",
+    "build_checker_supervisor_signal",
     "build_checker_exchange_feeds",
     "build_checker_feed_handler",
     "evaluate_checker_policies",
