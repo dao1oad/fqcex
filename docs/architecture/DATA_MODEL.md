@@ -51,3 +51,22 @@
 - `orders`
 - `positions`
 - `balances`
+
+## Truth Store Initialization
+
+- PostgreSQL truth store 以 `migrations/postgres/0001_core_truth_schema.sql` 作为最小初始化入口
+- `CORE_TRUTH_TABLES` 是当前 Phase 2 的最小表集真相
+- schema 与 repository contract 必须围绕同一组表名工作，不能在边界外引入额外真相表
+
+## Persistence Mapping
+
+- `orders`
+  - 保存订单真相与边界字段：`base_qty`、`exchange_qty`、`exchange_qty_kind`
+- `positions`
+  - 保存仓位与风险字段：`base_qty`、`mark_price`、`notional_usdt`
+- `balances`
+  - 保存账户余额真相：`wallet_balance`、`available_balance`
+- `tradeability_states`
+  - 保存 Supervisor 投影真相：`supervisor_state`、`allow_open`、`allow_reduce`
+- `recovery_runs`
+  - 保存恢复过程元数据：`phase`、`status`、`trigger_reason`、`blockers_json`
