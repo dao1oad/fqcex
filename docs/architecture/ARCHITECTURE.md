@@ -38,3 +38,12 @@ Build a connection management platform for multi-exchange perpetual futures arbi
 - Orders, positions, balances: Nautilus runtime path
 - Tradeability: Supervisor
 - Independent market suspicion signals: Cryptofeed checker
+
+## Checker Boundary
+
+- `Cryptofeed checker` uses venue `TICKER` streams as the independent Phase 1 top-of-book source for `Bybit`, `Binance Futures`, and `OKX`.
+- Checker normalization stays at the boundary layer:
+  - canonical instrument ids remain `*-USDT-PERP`
+  - venue-native exchange symbols remain attached for diagnostics
+  - venue-specific top-of-book size fields are extracted from raw payloads and normalized into unified `bid_size` / `ask_size`
+- Symbol mapping is primed with the frozen Phase 1 instrument set so checker startup does not depend on live symbol discovery.
