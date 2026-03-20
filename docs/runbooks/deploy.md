@@ -35,6 +35,19 @@
 
 执行干跑前，先复制或合并该模板到目标 `deploy/.env`，不要直接在生产 env 上临时修改。
 
+## Dry Run Operator Checklist
+
+启动前，操作员至少确认：
+
+1. `deploy/dry-run.env` 已复制到目标 `deploy/.env`
+2. 仅启用了 `BTC-USDT-PERP`、`ETH-USDT-PERP`
+3. checker 和 supervisor 没有处于 `REDUCE_ONLY` 或 `BLOCKED`
+4. 已准备审计采集命令，例如：
+
+```sh
+py scripts/capture_dry_run_audit.py --operator alice --stage btc-preflight --venue BYBIT --instrument-id BTC-USDT-PERP --action start_dry_run --result success --evidence-path docs/plans/dry-run-evidence.md
+```
+
 ## Bootstrap 步骤
 
 运行：
