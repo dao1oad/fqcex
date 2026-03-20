@@ -46,4 +46,8 @@ Build a connection management platform for multi-exchange perpetual futures arbi
   - canonical instrument ids remain `*-USDT-PERP`
   - venue-native exchange symbols remain attached for diagnostics
   - venue-specific top-of-book size fields are extracted from raw payloads and normalized into unified `bid_size` / `ask_size`
+- Checker policy evaluation stays separate from Supervisor truth:
+  - freshness uses `receipt_timestamp` and local age calculation
+  - divergence compares same-venue same-instrument bid/ask in basis points against a reference top-of-book
+  - policy output is an intermediate judgment, not a direct Supervisor state override
 - Symbol mapping is primed with the frozen Phase 1 instrument set so checker startup does not depend on live symbol discovery.
