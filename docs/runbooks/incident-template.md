@@ -13,12 +13,16 @@
 - What failed:
 - First detection source:
 - Automatic actions taken:
+- Injected scenario:
+- Injector script:
+- Injector plan path:
 
 ## Operator Actions
 
 - Manual downgrade:
 - Manual recovery:
 - Manual resume or block:
+- Observed checker / supervisor state:
 
 ## Outcome
 
