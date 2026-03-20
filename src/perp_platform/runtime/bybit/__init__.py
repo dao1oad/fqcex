@@ -10,6 +10,13 @@ from .guards import (
     validate_bybit_order_capability,
 )
 from .order_path import BybitOrderPath, build_bybit_order_path
+from .reconciliation import (
+    BybitBalanceSnapshot,
+    BybitOrderSnapshot,
+    BybitPositionSnapshot,
+    BybitReconciliationResult,
+    reconcile_bybit_state,
+)
 from .recovery import (
     BybitRecoveryEvent,
     BybitRecoveryPhase,
@@ -29,11 +36,16 @@ __all__ = [
     "BybitRecoveryPhase",
     "BybitRecoveryState",
     "BybitOrderPath",
+    "BybitBalanceSnapshot",
+    "BybitOrderSnapshot",
+    "BybitPositionSnapshot",
+    "BybitReconciliationResult",
     "BybitStreamClient",
     "bootstrap_bybit_runtime",
     "build_bybit_order_path",
     "advance_bybit_recovery",
     "begin_bybit_recovery",
+    "reconcile_bybit_state",
     "build_bybit_runtime_guards",
     "load_bybit_runtime_config",
     "validate_bybit_leverage",
