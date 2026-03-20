@@ -1,0 +1,9 @@
+{
+  "operator": "codex",
+  "stage": "eth-bybit",
+  "venue": "BYBIT",
+  "instrument_id": "ETH-USDT-PERP",
+  "action": "ws_disconnect_rehearsal",
+  "result": "success",
+  "evidence_path": "docs/plans/dry-run-evidence.md"
+}

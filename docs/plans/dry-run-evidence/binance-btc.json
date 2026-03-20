@@ -1,0 +1,9 @@
+{
+  "operator": "codex",
+  "stage": "btc-binance",
+  "venue": "BINANCE",
+  "instrument_id": "BTC-USDT-PERP",
+  "action": "private_silence_rehearsal",
+  "result": "success",
+  "evidence_path": "docs/plans/dry-run-evidence.md"
+}

@@ -1,0 +1,9 @@
+{
+  "operator": "codex",
+  "stage": "eth-okx",
+  "venue": "OKX",
+  "instrument_id": "ETH-USDT-PERP",
+  "action": "reconcile_diff_rehearsal",
+  "result": "success",
+  "evidence_path": "docs/plans/dry-run-evidence.md"
+}
