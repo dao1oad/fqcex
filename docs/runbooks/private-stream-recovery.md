@@ -36,6 +36,27 @@
 4. Move to `BLOCKED` if order or position truth cannot be confirmed
 5. 对账通过后，执行 cooldown + operator review，再评估是否 force resume
 
+## Fault Injection Drill
+
+私有流静默演练先生成注入计划：
+
+```sh
+py scripts/inject_private_silence.py --venue BYBIT --duration-seconds 30 --output deploy/state/private-silence.json
+```
+
+对账差异演练先生成注入计划：
+
+```sh
+py scripts/inject_reconcile_diff.py --venue BYBIT --resource position --diff-kind mismatch --instrument-id BTC-USDT-PERP --output deploy/state/reconcile-diff.json
+```
+
+操作员必须记录：
+
+- plan 文件路径
+- 进入 `REDUCE_ONLY` 的时间
+- 对账差异键或差异类型
+- 是否升级为 `BLOCKED`
+
 ## Escalation
 
 - Unknown order state
