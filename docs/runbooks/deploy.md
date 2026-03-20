@@ -20,6 +20,21 @@
 
 当前 runbook 只覆盖单机、单环境、单服务启动，不包含交易所密钥或多账户部署策略。
 
+## Dry Run 模板
+
+`deploy/dry-run.env` 提供 Phase 3 小规模干跑的最小模板，默认只允许：
+
+- `BTC-USDT-PERP`
+- `ETH-USDT-PERP`
+
+并默认启用以下安全闸门：
+
+- `DRY_RUN_ABORT_ON_CHECKER_DIVERGENCE=true`
+- `DRY_RUN_ABORT_ON_SUPERVISOR_REDUCE_ONLY=true`
+- `DRY_RUN_ABORT_ON_SUPERVISOR_BLOCKED=true`
+
+执行干跑前，先复制或合并该模板到目标 `deploy/.env`，不要直接在生产 env 上临时修改。
+
 ## Bootstrap 步骤
 
 运行：
