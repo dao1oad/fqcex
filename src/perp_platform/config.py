@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Mapping
 
-ALLOWED_ENVIRONMENTS = frozenset({"dev", "test", "prod"})
+ALLOWED_ENVIRONMENTS = frozenset({"dev", "test", "prod", "dry-run"})
 ALLOWED_LOG_LEVELS = frozenset({"DEBUG", "INFO", "WARNING", "ERROR"})
 
 
@@ -22,7 +22,7 @@ def load_config(environ: Mapping[str, str] | None = None) -> AppConfig:
 
     if environment not in ALLOWED_ENVIRONMENTS:
         raise ValueError(
-            "PERP_PLATFORM_ENVIRONMENT must be one of: dev, test, prod"
+            "PERP_PLATFORM_ENVIRONMENT must be one of: dev, test, prod, dry-run"
         )
 
     if log_level not in ALLOWED_LOG_LEVELS:

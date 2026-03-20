@@ -23,6 +23,14 @@ def test_load_config_rejects_invalid_environment() -> None:
         config_module.load_config({"PERP_PLATFORM_ENVIRONMENT": "staging"})
 
 
+def test_load_config_accepts_dry_run_environment() -> None:
+    config_module = load_config_module()
+
+    config = config_module.load_config({"PERP_PLATFORM_ENVIRONMENT": "dry-run"})
+
+    assert config.environment == "dry-run"
+
+
 def test_load_config_rejects_invalid_log_level() -> None:
     config_module = load_config_module()
 
