@@ -64,6 +64,13 @@ def test_bootstrap_okx_runtime_returns_stable_result() -> None:
     assert result.client_targets.rest_base_url == "https://www.okx.com"
     assert result.client_targets.public_ws_url == "wss://wspap.okx.com:8443/ws/v5/public"
     assert result.client_targets.private_ws_url == "wss://wspap.okx.com:8443/ws/v5/private"
+    assert result.runtime.rest_base_url == "https://www.okx.com"
+    assert result.runtime.public_ws_url == "wss://wspap.okx.com:8443/ws/v5/public"
+    assert result.runtime.private_ws_url == "wss://wspap.okx.com:8443/ws/v5/private"
+    assert result.runtime.position_mode == "net"
+    assert result.runtime.margin_mode == "isolated"
+    assert result.guards.position_mode == "net"
+    assert result.guards.margin_mode == "isolated"
 
 
 def test_bootstrap_okx_runtime_requires_key_secret_and_passphrase_for_private_client() -> (
@@ -84,3 +91,4 @@ def test_bootstrap_okx_runtime_requires_key_secret_and_passphrase_for_private_cl
 
     assert result.client_label == "okx-swap-mainnet"
     assert result.private_client_enabled is False
+    assert result.runtime.private_ws_url is None
