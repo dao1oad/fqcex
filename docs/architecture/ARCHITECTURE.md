@@ -50,4 +50,9 @@ Build a connection management platform for multi-exchange perpetual futures arbi
   - freshness uses `receipt_timestamp` and local age calculation
   - divergence compares same-venue same-instrument bid/ask in basis points against a reference top-of-book
   - policy output is an intermediate judgment, not a direct Supervisor state override
+- Checker signal mapping is a separate projection step:
+  - healthy policies project to `SupervisorState.LIVE`
+  - stale checker data projects to `SupervisorState.DEGRADED`
+  - top-of-book divergence projects to `SupervisorState.RESYNCING`
+  - Supervisor remains the tradeability truth source even when checker suggests a stricter state
 - Symbol mapping is primed with the frozen Phase 1 instrument set so checker startup does not depend on live symbol discovery.
