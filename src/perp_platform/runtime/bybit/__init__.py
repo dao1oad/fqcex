@@ -9,6 +9,7 @@ from .guards import (
     validate_bybit_leverage,
     validate_bybit_order_capability,
 )
+from .order_path import BybitOrderPath, build_bybit_order_path
 from .runtime import BybitRuntimeWiring, wire_bybit_runtime
 
 __all__ = [
@@ -17,8 +18,10 @@ __all__ = [
     "BybitRuntimeConfig",
     "BybitRuntimeGuards",
     "BybitRuntimeWiring",
+    "BybitOrderPath",
     "BybitStreamClient",
     "bootstrap_bybit_runtime",
+    "build_bybit_order_path",
     "build_bybit_runtime_guards",
     "load_bybit_runtime_config",
     "validate_bybit_leverage",
