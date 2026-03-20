@@ -48,3 +48,17 @@ perp-platform bootstrap ready [dev]
 - 如果脚本提示目标镜像不存在，先停止继续 rollout，不要强行回滚到未知镜像
 - 如果回滚执行失败，保留日志并升级为人工处置
 - 在失败原因未解释清楚前，不继续 smoke 或任何后续交付动作
+
+## Dry Run Rollback Audit
+
+若干跑阶段触发回滚，操作员必须补一条审计记录：
+
+```sh
+py scripts/capture_dry_run_audit.py --operator alice --stage rollback --venue BYBIT --instrument-id BTC-USDT-PERP --action rollback --result success --evidence-path docs/plans/dry-run-evidence.md
+```
+
+并同步记录：
+
+- 回滚前的 supervisor state
+- 触发回滚的 checker / runtime 信号
+- 回滚后是否保持 `REDUCE_ONLY`
