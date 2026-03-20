@@ -25,6 +25,11 @@ from .recovery import (
     begin_bybit_recovery,
 )
 from .runtime import BybitRuntimeWiring, wire_bybit_runtime
+from .tradeability import (
+    BybitTradeabilityMode,
+    BybitTradeabilityProjection,
+    project_bybit_tradeability,
+)
 
 __all__ = [
     "BybitExecutionClient",
@@ -41,6 +46,8 @@ __all__ = [
     "BybitPositionSnapshot",
     "BybitReconciliationResult",
     "BybitStreamClient",
+    "BybitTradeabilityMode",
+    "BybitTradeabilityProjection",
     "bootstrap_bybit_runtime",
     "build_bybit_order_path",
     "advance_bybit_recovery",
@@ -51,4 +58,5 @@ __all__ = [
     "validate_bybit_leverage",
     "validate_bybit_order_capability",
     "wire_bybit_runtime",
+    "project_bybit_tradeability",
 ]
