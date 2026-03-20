@@ -60,6 +60,11 @@ def test_bootstrap_binance_runtime_returns_stable_result() -> None:
     assert result.runtime_config.environment == "testnet"
     assert result.runtime_config.market == "usdm"
     assert result.runtime_config.settle_asset == "USDT"
+    assert result.runtime.public_stream.channel == "public"
+    assert result.runtime.public_stream.url == "wss://stream.binancefuture.com/ws"
+    assert result.runtime.execution_client.rest_base_url == (
+        "https://testnet.binancefuture.com"
+    )
     assert result.client_targets.rest_base_url == "https://testnet.binancefuture.com"
     assert result.client_targets.public_ws_url == "wss://stream.binancefuture.com/ws"
     assert result.client_targets.private_ws_url == "wss://stream.binancefuture.com/ws"
@@ -83,3 +88,4 @@ def test_bootstrap_binance_runtime_disables_private_client_without_credentials()
 
     assert result.client_label == "binance-usdm-mainnet"
     assert result.private_client_enabled is False
+    assert result.runtime.private_stream is None
