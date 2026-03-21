@@ -25,6 +25,16 @@
 - Harden supervisor
 - Externalize state, audit, operator controls
 
+### Phase 4 Delivery Order
+
+1. control-plane api surface
+2. operator actions and permissions
+3. read models for tradeability and recovery
+4. platform boundary and migration plan
+5. audit boundary and runbooks
+
+Phase 4 exits only after the platform boundary is documented without changing truth ownership and the audit/operator surface is fully documented.
+
 ## Phase 5: Native Tier-1 Adapters
 
 - Replace selected Tier-1 venue paths with native adapters
