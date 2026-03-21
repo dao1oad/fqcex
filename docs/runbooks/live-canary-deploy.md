@@ -9,6 +9,7 @@
 - 目标主机已同步仓库内容
 - 已安装 `docker`
 - 已安装 `docker compose` 或 `docker-compose`
+- 已安装 `python3`
 - 已从 `deploy/live-canary.env.example` 生成目标 `deploy/.env`
 - 已在主机上准备：
   - kill switch 文件
@@ -30,10 +31,12 @@
 
 - `PERP_PLATFORM_ENVIRONMENT=live-canary`
 - `LIVE_CANARY_ENABLED=true`
+- `CONTROL_PLANE_BIND_ADDRESS`
 - `LIVE_CANARY_ALLOWED_VENUES`
 - `LIVE_CANARY_ALLOWED_INSTRUMENTS`
 - `LIVE_CANARY_MAX_NOTIONAL_USD`
 - `LIVE_CANARY_KILL_SWITCH_PATH`
+- `OPERATOR_UI_BIND_ADDRESS`
 - `BYBIT_CREDENTIALS_FILE`
 - `BINANCE_CREDENTIALS_FILE`
 - `OKX_CREDENTIALS_FILE`
@@ -81,8 +84,10 @@ sh deploy/scripts/deploy.sh /srv/perp-platform/deploy/.env
 该脚本会：
 
 1. 构建 `control-plane` 与 `operator-ui` 两个服务
-2. 使用 `docker compose up -d` 拉起长期运行栈
+2. 使用 `docker compose up -d` 或 `docker-compose up -d` 拉起长期运行栈
 3. 对 `control-plane` 健康接口和 `operator-ui` 首页做最小健康检查
+
+默认情况下，这两个服务只绑定宿主 `127.0.0.1`，不要直接把未认证 operator write API 暴露到公网。
 
 ## 后续步骤
 

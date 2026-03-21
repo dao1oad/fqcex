@@ -7,8 +7,9 @@ services:
     env_file:
       - ${LIVE_CANARY_ENV_FILE:-.env}
     command: ["python", "-m", "perp_platform.control_plane", "--host", "0.0.0.0", "--port", "8080"]
+    restart: unless-stopped
     ports:
-      - "${CONTROL_PLANE_PORT:-8080}:8080"
+      - "${CONTROL_PLANE_BIND_ADDRESS:-127.0.0.1}:${CONTROL_PLANE_PORT:-8080}:8080"
   operator-ui:
     image: "${PERP_PLATFORM_IMAGE_REPO}-ui:${PERP_PLATFORM_IMAGE_TAG}"
     build:
@@ -16,5 +17,6 @@ services:
       dockerfile: deploy/operator-ui.Dockerfile
     depends_on:
       - control-plane
+    restart: unless-stopped
     ports:
-      - "${OPERATOR_UI_PORT:-4173}:80"
+      - "${OPERATOR_UI_BIND_ADDRESS:-127.0.0.1}:${OPERATOR_UI_PORT:-4173}:80"
