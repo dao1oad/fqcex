@@ -57,6 +57,21 @@ The following credentials remain prohibited from Codex cloud task configuration,
 
 If a task requires any of the above, keep it local or behind explicit human approval instead of moving it into Codex cloud.
 
+## Control-plane operator boundary
+
+Control-plane write tokens must not be placed into Codex cloud environments.
+
+Control-plane write access must stay behind human-scoped identities and explicit operator intent.
+
+Read-only clients may consume control-plane projections, but write actions must remain separated from read-only access paths.
+
+The following controls apply to operator actions:
+
+- write credentials stay local to named operators
+- human-scoped identities are required for operator write access
+- write actions must remain auditable
+- cloud automation must not receive control-plane write tokens
+
 ## Public Issue Guidance
 
 If the issue is not sensitive, you may open a public bug or ops issue.

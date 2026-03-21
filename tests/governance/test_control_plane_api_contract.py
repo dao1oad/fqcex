@@ -18,7 +18,7 @@ def test_control_plane_api_doc_defines_minimal_resource_surface() -> None:
     assert "Operator Actions" in content
     assert "projection layer" in content
     assert "不是新的 truth source" in content
-    assert "延后到 `#68`" in content
+    assert "Action Permission Boundary" in content
     assert "延后到 `#69`" in content
 
 
