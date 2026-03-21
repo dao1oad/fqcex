@@ -8,7 +8,7 @@
 
 - 目标主机已同步仓库内容
 - 已安装 `docker`
-- 已安装 `docker compose`
+- 已安装 `docker compose` 或 `docker-compose`
 - 已从 `deploy/live-canary.env.example` 生成目标 `deploy/.env`
 - 已在主机上准备：
   - kill switch 文件
@@ -43,13 +43,13 @@
 在目标主机运行：
 
 ```sh
-deploy/scripts/preflight-live.sh
+sh deploy/scripts/preflight-live.sh
 ```
 
 如果 `deploy/.env` 不在默认位置，可显式传入：
 
 ```sh
-deploy/scripts/preflight-live.sh /srv/perp-platform/deploy/.env
+sh deploy/scripts/preflight-live.sh /srv/perp-platform/deploy/.env
 ```
 
 preflight 会阻断：
@@ -75,7 +75,7 @@ preflight 会阻断：
 preflight 通过后，在目标主机运行：
 
 ```sh
-deploy/scripts/deploy.sh /srv/perp-platform/deploy/.env
+sh deploy/scripts/deploy.sh /srv/perp-platform/deploy/.env
 ```
 
 该脚本会：

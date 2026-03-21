@@ -11,8 +11,12 @@ if ! command -v docker >/dev/null 2>&1; then
   exit 1
 fi
 
-if ! docker compose version >/dev/null 2>&1; then
-  echo "docker compose is required but is not available" >&2
+if docker compose version >/dev/null 2>&1; then
+  DOCKER_COMPOSE_BIN="docker compose"
+elif command -v docker-compose >/dev/null 2>&1 && docker-compose version >/dev/null 2>&1; then
+  DOCKER_COMPOSE_BIN="docker-compose"
+else
+  echo "docker compose or docker-compose is required but is not available" >&2
   exit 1
 fi
 

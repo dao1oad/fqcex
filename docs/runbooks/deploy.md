@@ -3,7 +3,7 @@
 ## 前置条件
 
 - 已安装 `docker`
-- 已安装 `docker compose`
+- 已安装 `docker compose` 或 `docker-compose`
 - 仓库内容已同步到目标主机
 - 已准备 `deploy/.env`
 - 已记录可回退的上一个 `PERP_PLATFORM_IMAGE_TAG`
@@ -70,7 +70,7 @@ py scripts/capture_dry_run_audit.py --operator alice --stage btc-preflight --ven
 运行：
 
 ```sh
-deploy/scripts/bootstrap-server.sh /srv/perp-platform/deploy/.env
+sh deploy/scripts/bootstrap-server.sh /srv/perp-platform/deploy/.env
 ```
 
 该脚本会：
@@ -85,7 +85,7 @@ deploy/scripts/bootstrap-server.sh /srv/perp-platform/deploy/.env
 进入 live canary 前，先运行：
 
 ```sh
-deploy/scripts/preflight-live.sh
+sh deploy/scripts/preflight-live.sh
 ```
 
 它会在部署前阻断缺失 credentials file、缺失 allowlist 或缺失 kill switch 的环境。
@@ -97,7 +97,7 @@ deploy/scripts/preflight-live.sh
 运行：
 
 ```sh
-deploy/scripts/deploy.sh /srv/perp-platform/deploy/.env
+sh deploy/scripts/deploy.sh /srv/perp-platform/deploy/.env
 ```
 
 该脚本会：

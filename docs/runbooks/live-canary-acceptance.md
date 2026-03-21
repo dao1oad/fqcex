@@ -22,7 +22,7 @@
 必须先确认：
 
 - `docker` 可用
-- `docker compose` 可用
+- `docker compose` 或 `docker-compose` 可用
 - 仓库代码已同步到目标主机
 - `/srv/perp-platform/state/kill-switch.flag` 存在
 - `/srv/perp-platform/secrets/bybit.env` 存在
@@ -53,8 +53,8 @@
 
 ```sh
 cd /srv/perp-platform/repo
-deploy/scripts/preflight-live.sh /srv/perp-platform/deploy/.env
-deploy/scripts/deploy.sh /srv/perp-platform/deploy/.env
+sh deploy/scripts/preflight-live.sh /srv/perp-platform/deploy/.env
+sh deploy/scripts/deploy.sh /srv/perp-platform/deploy/.env
 ```
 
 ## 健康检查
@@ -65,7 +65,7 @@ deploy/scripts/deploy.sh /srv/perp-platform/deploy/.env
 
 ```sh
 cd /srv/perp-platform/repo
-docker compose --env-file /srv/perp-platform/deploy/.env -f deploy/docker-compose.yml ps
+docker-compose --env-file /srv/perp-platform/deploy/.env -f deploy/docker-compose.yml ps
 ```
 
 预期：
@@ -133,7 +133,7 @@ PY
 
 ```sh
 cd /srv/perp-platform/repo
-deploy/scripts/rollback.sh <previous-image-tag> /srv/perp-platform/deploy/.env
+sh deploy/scripts/rollback.sh <previous-image-tag> /srv/perp-platform/deploy/.env
 ```
 
 回滚后重复执行本手册中的健康检查。

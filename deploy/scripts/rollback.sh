@@ -33,8 +33,12 @@ if ! command -v docker >/dev/null 2>&1; then
   exit 1
 fi
 
-if ! docker compose version >/dev/null 2>&1; then
-  echo "docker compose is required but is not available" >&2
+if docker compose version >/dev/null 2>&1; then
+  DOCKER_COMPOSE_BIN="docker compose"
+elif command -v docker-compose >/dev/null 2>&1 && docker-compose version >/dev/null 2>&1; then
+  DOCKER_COMPOSE_BIN="docker-compose"
+else
+  echo "docker compose or docker-compose is required but is not available" >&2
   exit 1
 fi
 
@@ -66,7 +70,7 @@ END {
 ' "$ENV_FILE" > "$TMP_ENV"
 
 echo "rolling back to ${TARGET_IMAGE}"
-LIVE_CANARY_ENV_FILE="$TMP_ENV" docker compose --env-file "$TMP_ENV" -f "$COMPOSE_FILE" up -d --no-build --force-recreate control-plane operator-ui
+LIVE_CANARY_ENV_FILE="$TMP_ENV" sh -c "$DOCKER_COMPOSE_BIN --env-file \"$TMP_ENV\" -f \"$COMPOSE_FILE\" up -d --no-build --force-recreate control-plane operator-ui"
 
 CONTROL_PLANE_PORT=$(awk -F= '/^CONTROL_PLANE_PORT=/{print $2}' "$TMP_ENV")
 if [ -z "$CONTROL_PLANE_PORT" ]; then
