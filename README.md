@@ -108,6 +108,9 @@ python -m perp_platform.control_plane --host 127.0.0.1 --port 8080
 - `GET /control-plane/v1/recovery/runs/{run_id}`
 - `GET /control-plane/v1/checker/signals`
 - `GET /control-plane/v1/checker/signals/{signal_id}`
+- `POST /control-plane/v1/operator-actions/force_reduce_only`
+- `POST /control-plane/v1/operator-actions/force_block`
+- `POST /control-plane/v1/operator-actions/force_resume`
 
 ## Memory System
 

@@ -11,7 +11,11 @@ class ControlPlaneHTTPRequestHandler(BaseHTTPRequestHandler):
         self._write_response(self.server.app.handle("GET", self.path))
 
     def do_POST(self) -> None:  # noqa: N802
-        self._write_response(self.server.app.handle("POST", self.path))
+        content_length = int(self.headers.get("Content-Length", "0"))
+        payload = None
+        if content_length > 0:
+            payload = json.loads(self.rfile.read(content_length).decode("utf-8"))
+        self._write_response(self.server.app.handle("POST", self.path, payload))
 
     def log_message(self, format: str, *args: object) -> None:
         return

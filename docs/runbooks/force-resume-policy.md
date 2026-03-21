@@ -21,6 +21,7 @@
 - Timestamp
 - Target venue or instrument
 - Audit trail entry
+- `force_resume` request body must include explicit recovery / reconciliation preconditions
 
 ## Permission Boundary
 
@@ -29,6 +30,7 @@
 - 发起前必须复核 latest recovery context
 - 发起前必须确认恢复完成、对账通过且没有未解释差异
 - 如果任一前提不满足，保持 `REDUCE_ONLY` 或 `BLOCKED`
+- control-plane `force_resume` handler 必须在请求入口返回 `409 conflict`，而不是静默接受不满足前提的请求
 
 ## Evidence Hygiene
 
