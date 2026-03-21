@@ -108,9 +108,17 @@ python -m perp_platform.control_plane --host 127.0.0.1 --port 8080
 - `GET /control-plane/v1/recovery/runs/{run_id}`
 - `GET /control-plane/v1/checker/signals`
 - `GET /control-plane/v1/checker/signals/{signal_id}`
+- `GET /control-plane/v1/audit/events`
+- `GET /control-plane/v1/audit/events/{event_id}`
 - `POST /control-plane/v1/operator-actions/force_reduce_only`
 - `POST /control-plane/v1/operator-actions/force_block`
 - `POST /control-plane/v1/operator-actions/force_resume`
+
+当前最小 audit query 过滤条件：
+
+- `correlation_id`
+- `occurred_after`
+- `occurred_before`
 
 ## Memory System
 

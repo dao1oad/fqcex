@@ -8,6 +8,8 @@ from .actions import (
 )
 from .app import ControlPlaneApp, ControlPlaneResponse
 from .queries import (
+    AuditEventQuery,
+    AuditEventView,
     CheckerSignalView,
     ControlPlaneQueryBackend,
     InMemoryControlPlaneQueryBackend,
@@ -18,6 +20,8 @@ from .queries import (
 from .server import create_control_plane_server, serve_control_plane
 
 __all__ = [
+    "AuditEventQuery",
+    "AuditEventView",
     "CheckerSignalView",
     "ControlPlaneApp",
     "ControlPlaneQueryBackend",
