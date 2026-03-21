@@ -48,6 +48,8 @@ def test_dockerfile_builds_and_runs_control_plane() -> None:
     content = read_text("deploy/Dockerfile")
 
     assert "FROM python:3.12-slim" in content
+    assert "apt-get install" in content
+    assert "build-essential" in content
     assert "python -m pip install ." in content
     assert 'CMD ["python", "-m", "perp_platform.control_plane"' in content
 
