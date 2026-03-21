@@ -39,7 +39,16 @@
 - `GET /control-plane/v1/venues`
 - `GET /control-plane/v1/venues/{venue}`
 
-具体 read model 字段与投影细节延后到 `#69`。
+#### Venue Tradeability Read Model
+
+该读模型来自 `Supervisor` 投影和 `tradeability_states`，是 projection, not a new truth source。
+
+最小字段：
+
+- `venue`
+- `supervisor_state`
+- `allow_open`
+- `allow_reduce`
 
 ### Instrument Tradeability
 
@@ -50,7 +59,17 @@
 - `GET /control-plane/v1/instruments`
 - `GET /control-plane/v1/instruments/{instrument_id}`
 
-具体 read model 字段与投影细节延后到 `#69`。
+#### Instrument Tradeability Read Model
+
+该读模型来自 `Supervisor` 投影和 `tradeability_states`，是 projection, not a new truth source。
+
+最小字段：
+
+- `instrument_id`
+- `venue`
+- `supervisor_state`
+- `allow_open`
+- `allow_reduce`
 
 ### Recovery Runs
 
@@ -61,7 +80,17 @@
 - `GET /control-plane/v1/recovery/runs`
 - `GET /control-plane/v1/recovery/runs/{run_id}`
 
-具体 read model 字段与投影细节延后到 `#69`。
+#### Recovery Run Read Model
+
+该读模型来自 `recovery_runs`，是 projection, not a new truth source。
+
+最小字段：
+
+- `run_id`
+- `phase`
+- `status`
+- `trigger_reason`
+- `blockers_json`
 
 ### Checker Signals
 
@@ -163,6 +192,5 @@
 
 ## Follow-On Issues
 
-- `#69` 细化 venue/instrument/recovery 读模型字段
 - `#70` 发布平台化切分边界与迁移计划
 - `#85` 定义操作员动作与恢复事件模型

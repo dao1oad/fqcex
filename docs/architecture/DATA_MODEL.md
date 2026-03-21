@@ -70,3 +70,25 @@
   - 保存 Supervisor 投影真相：`supervisor_state`、`allow_open`、`allow_reduce`
 - `recovery_runs`
   - 保存恢复过程元数据：`phase`、`status`、`trigger_reason`、`blockers_json`
+
+## Control Plane Read Models
+
+控制平面读模型只消费现有真相表与 `Supervisor` 投影，不新增新的 truth source。
+
+### Venue Tradeability Read Model
+
+- 读取来源：`tradeability_states`
+- 投影字段：`venue`、`supervisor_state`、`allow_open`、`allow_reduce`
+- 语义：对外暴露 venue 级 tradeability projection
+
+### Instrument Tradeability Read Model
+
+- 读取来源：`tradeability_states`
+- 投影字段：`instrument_id`、`venue`、`supervisor_state`、`allow_open`、`allow_reduce`
+- 语义：对外暴露 instrument 级 tradeability projection
+
+### Recovery Run Read Model
+
+- 读取来源：`recovery_runs`
+- 投影字段：`run_id`、`phase`、`status`、`trigger_reason`、`blockers_json`
+- 语义：对外暴露恢复过程状态与阻断原因
