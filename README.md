@@ -85,6 +85,7 @@ See:
 - Codex cloud security boundaries: [docs/runbooks/codex-cloud-security.md](docs/runbooks/codex-cloud-security.md)
 - Codex cloud execution boundary: [docs/architecture/CODEX_CLOUD_BOUNDARIES.md](docs/architecture/CODEX_CLOUD_BOUNDARIES.md)
 - Live canary deploy: [docs/runbooks/live-canary-deploy.md](docs/runbooks/live-canary-deploy.md)
+- Live canary acceptance: [docs/runbooks/live-canary-acceptance.md](docs/runbooks/live-canary-acceptance.md)
 - Live canary approval: [docs/runbooks/live-canary-approval.md](docs/runbooks/live-canary-approval.md)
 - Operator readonly UI: [docs/runbooks/operator-readonly-ui.md](docs/runbooks/operator-readonly-ui.md)
 - Governance: [GOVERNANCE.md](GOVERNANCE.md)

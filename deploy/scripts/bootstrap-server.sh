@@ -3,7 +3,7 @@ set -eu
 
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 PROJECT_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/../.." && pwd)
-ENV_FILE="$PROJECT_ROOT/deploy/.env"
+ENV_FILE="${1:-$PROJECT_ROOT/deploy/.env}"
 STATE_DIR="$PROJECT_ROOT/deploy/state"
 
 if ! command -v docker >/dev/null 2>&1; then
@@ -11,15 +11,19 @@ if ! command -v docker >/dev/null 2>&1; then
   exit 1
 fi
 
-if ! docker compose version >/dev/null 2>&1; then
-  echo "docker compose is required but is not available" >&2
+if docker compose version >/dev/null 2>&1; then
+  DOCKER_COMPOSE_BIN="docker compose"
+elif command -v docker-compose >/dev/null 2>&1 && docker-compose version >/dev/null 2>&1; then
+  DOCKER_COMPOSE_BIN="docker-compose"
+else
+  echo "docker compose or docker-compose is required but is not available" >&2
   exit 1
 fi
 
 mkdir -p "$STATE_DIR"
 
 if [ ! -f "$ENV_FILE" ]; then
-  echo "missing deploy/.env; copy deploy/.env.example to deploy/.env before deploying" >&2
+  echo "missing env file: $ENV_FILE" >&2
   exit 1
 fi
 

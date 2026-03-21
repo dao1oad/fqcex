@@ -199,6 +199,7 @@
     - `#150 live 安全闸门：实现 max notional、最小交易对 allowlist、kill switch 与 operator approval`
     - `#151 operator UI：增加只读验收控制台与 tradeability / recovery / audit 页面`
     - `#152 operator UI：增加受控 operator action 页面与审计联动验证`
+    - `#168 live 部署：增加 control-plane 与 operator UI 的常驻入口`
   - `#144 [Tracking] 执行三交易所 live canary 与 closeout`
     - `#153 live canary：执行 Bybit 单账户小资金验收并收集证据`
     - `#154 live canary：执行 Binance 单账户小资金验收并收集证据`

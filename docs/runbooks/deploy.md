@@ -3,7 +3,7 @@
 ## 前置条件
 
 - 已安装 `docker`
-- 已安装 `docker compose`
+- 已安装 `docker compose` 或 `docker-compose`
 - 仓库内容已同步到目标主机
 - 已准备 `deploy/.env`
 - 已记录可回退的上一个 `PERP_PLATFORM_IMAGE_TAG`
@@ -19,6 +19,10 @@
 - `PERP_PLATFORM_IMAGE_TAG`
 
 当前 runbook 只覆盖单机、单环境、单服务启动，不包含交易所密钥或多账户部署策略。
+当前 live deploy stack 已升级为双服务：
+
+- `control-plane`
+- `operator-ui`
 
 ## Dry Run 模板
 
@@ -66,7 +70,7 @@ py scripts/capture_dry_run_audit.py --operator alice --stage btc-preflight --ven
 运行：
 
 ```sh
-deploy/scripts/bootstrap-server.sh
+sh deploy/scripts/bootstrap-server.sh /srv/perp-platform/deploy/.env
 ```
 
 该脚本会：
@@ -74,14 +78,14 @@ deploy/scripts/bootstrap-server.sh
 - 检查 `docker` 是否可用
 - 检查 `docker compose` 是否可用
 - 创建 `deploy/state`
-- 校验 `deploy/.env` 是否存在
+- 校验传入的 env 文件是否存在
 
 ## Live Canary Preflight
 
 进入 live canary 前，先运行：
 
 ```sh
-deploy/scripts/preflight-live.sh
+sh deploy/scripts/preflight-live.sh
 ```
 
 它会在部署前阻断缺失 credentials file、缺失 allowlist 或缺失 kill switch 的环境。
@@ -93,24 +97,27 @@ deploy/scripts/preflight-live.sh
 运行：
 
 ```sh
-deploy/scripts/deploy.sh
+sh deploy/scripts/deploy.sh /srv/perp-platform/deploy/.env
 ```
 
 该脚本会：
 
 - 调用 `deploy/scripts/bootstrap-server.sh`
-- 执行 `docker compose --env-file deploy/.env -f deploy/docker-compose.yml build`
-- 执行 `docker compose --env-file deploy/.env -f deploy/docker-compose.yml run --rm perp-platform`
+- 构建 `control-plane` 与 `operator-ui`
+- 执行 `docker compose up -d`
+- 校验 `control-plane` 健康接口
+- 校验 `operator-ui` 首页
 
 ## 成功信号
 
-最小成功信号是容器完成启动并以退出码 `0` 结束，标准输出包含类似：
+最小成功信号是双服务都处于运行态，并且：
 
-```text
-perp-platform bootstrap ready [dev]
-```
+- `http://127.0.0.1:8080/control-plane/v1/health` 返回 200
+- `http://127.0.0.1:4173/` 返回 200
 
-环境名取决于 `PERP_PLATFORM_ENVIRONMENT`。
+详细人工验收清单见：
+
+- `docs/runbooks/live-canary-acceptance.md`
 
 ## 失败处理前置说明
 
