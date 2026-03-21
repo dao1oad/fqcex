@@ -94,6 +94,13 @@
 - control plane 只暴露 read-only audit query surface
 - 查询语义围绕 `event_id`、`event_type`、`correlation_id` 和时间窗口组织
 - 审计写入不通过 control-plane 查询接口进行
+- 当前最小查询接口为：
+  - `GET /control-plane/v1/audit/events`
+  - `GET /control-plane/v1/audit/events/{event_id}`
+- 当前最小过滤条件为：
+  - `correlation_id`
+  - `occurred_after`
+  - `occurred_before`
 
 ## Retention Policy
 

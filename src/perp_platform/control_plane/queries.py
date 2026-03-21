@@ -45,6 +45,24 @@ class CheckerSignalView:
     max_divergence_bps: str
 
 
+@dataclass(frozen=True)
+class AuditEventView:
+    event_id: str
+    event_type: str
+    occurred_at: str
+    source_component: str
+    scope: dict
+    correlation_id: str
+    recorded_by: str
+
+
+@dataclass(frozen=True)
+class AuditEventQuery:
+    correlation_id: str | None = None
+    occurred_after: str | None = None
+    occurred_before: str | None = None
+
+
 class ControlPlaneQueryBackend(Protocol):
     def list_venues(self) -> tuple[VenueTradeabilityView, ...]: ...
 
@@ -62,6 +80,10 @@ class ControlPlaneQueryBackend(Protocol):
 
     def get_checker_signal(self, signal_id: str) -> CheckerSignalView | None: ...
 
+    def list_audit_events(self, query: AuditEventQuery) -> tuple[AuditEventView, ...]: ...
+
+    def get_audit_event(self, event_id: str) -> AuditEventView | None: ...
+
 
 @dataclass(frozen=True)
 class InMemoryControlPlaneQueryBackend:
@@ -69,6 +91,7 @@ class InMemoryControlPlaneQueryBackend:
     instruments: tuple[InstrumentTradeabilityView, ...] = ()
     recovery_runs: tuple[RecoveryRunView, ...] = ()
     checker_signals: tuple[CheckerSignalView, ...] = ()
+    audit_events: tuple[AuditEventView, ...] = ()
 
     def list_venues(self) -> tuple[VenueTradeabilityView, ...]:
         return self.venues
@@ -99,6 +122,25 @@ class InMemoryControlPlaneQueryBackend:
             (item for item in self.checker_signals if item.signal_id == signal_id),
             None,
         )
+
+    def list_audit_events(self, query: AuditEventQuery) -> tuple[AuditEventView, ...]:
+        items = self.audit_events
+        if query.correlation_id is not None:
+            items = tuple(
+                item for item in items if item.correlation_id == query.correlation_id
+            )
+        if query.occurred_after is not None:
+            items = tuple(
+                item for item in items if item.occurred_at >= query.occurred_after
+            )
+        if query.occurred_before is not None:
+            items = tuple(
+                item for item in items if item.occurred_at <= query.occurred_before
+            )
+        return items
+
+    def get_audit_event(self, event_id: str) -> AuditEventView | None:
+        return next((item for item in self.audit_events if item.event_id == event_id), None)
 
 
 def serialize_items(items: tuple[object, ...]) -> list[dict]:

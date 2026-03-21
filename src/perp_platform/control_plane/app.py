@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from urllib.parse import parse_qs, urlsplit
 from uuid import uuid4
 
 from .actions import (
@@ -11,6 +12,7 @@ from .actions import (
     OperatorActionResult,
 )
 from .queries import (
+    AuditEventQuery,
     ControlPlaneQueryBackend,
     InMemoryControlPlaneQueryBackend,
     serialize_item,
@@ -41,60 +43,81 @@ class ControlPlaneApp:
         path: str,
         payload: dict | None = None,
     ) -> ControlPlaneResponse:
+        parsed = urlsplit(path)
+        route_path = parsed.path
+        query_params = parse_qs(parsed.query)
+
         if method == "POST":
-            return self._handle_post(path, payload)
+            return self._handle_post(route_path, payload)
 
         if method != "GET":
             return self._invalid_request("control plane method not allowed")
 
-        if path == "/control-plane/v1/health":
+        if route_path == "/control-plane/v1/health":
             return self._success({"service": "control-plane", "status": "ok"})
 
-        if path == "/control-plane/v1/readiness":
+        if route_path == "/control-plane/v1/readiness":
             return self._success({"service": "control-plane", "status": "ready"})
 
-        if path == "/control-plane/v1/venues":
+        if route_path == "/control-plane/v1/venues":
             return self._success({"items": serialize_items(self._query_backend.list_venues())})
 
-        if path.startswith("/control-plane/v1/venues/"):
-            venue = path.removeprefix("/control-plane/v1/venues/")
+        if route_path.startswith("/control-plane/v1/venues/"):
+            venue = route_path.removeprefix("/control-plane/v1/venues/")
             item = self._query_backend.get_venue(venue)
             if item is None:
                 return self._not_found()
             return self._success(serialize_item(item))
 
-        if path == "/control-plane/v1/instruments":
+        if route_path == "/control-plane/v1/instruments":
             return self._success(
                 {"items": serialize_items(self._query_backend.list_instruments())}
             )
 
-        if path.startswith("/control-plane/v1/instruments/"):
-            instrument_id = path.removeprefix("/control-plane/v1/instruments/")
+        if route_path.startswith("/control-plane/v1/instruments/"):
+            instrument_id = route_path.removeprefix("/control-plane/v1/instruments/")
             item = self._query_backend.get_instrument(instrument_id)
             if item is None:
                 return self._not_found()
             return self._success(serialize_item(item))
 
-        if path == "/control-plane/v1/recovery/runs":
+        if route_path == "/control-plane/v1/recovery/runs":
             return self._success(
                 {"items": serialize_items(self._query_backend.list_recovery_runs())}
             )
 
-        if path.startswith("/control-plane/v1/recovery/runs/"):
-            run_id = path.removeprefix("/control-plane/v1/recovery/runs/")
+        if route_path.startswith("/control-plane/v1/recovery/runs/"):
+            run_id = route_path.removeprefix("/control-plane/v1/recovery/runs/")
             item = self._query_backend.get_recovery_run(run_id)
             if item is None:
                 return self._not_found()
             return self._success(serialize_item(item))
 
-        if path == "/control-plane/v1/checker/signals":
+        if route_path == "/control-plane/v1/checker/signals":
             return self._success(
                 {"items": serialize_items(self._query_backend.list_checker_signals())}
             )
 
-        if path.startswith("/control-plane/v1/checker/signals/"):
-            signal_id = path.removeprefix("/control-plane/v1/checker/signals/")
+        if route_path.startswith("/control-plane/v1/checker/signals/"):
+            signal_id = route_path.removeprefix("/control-plane/v1/checker/signals/")
             item = self._query_backend.get_checker_signal(signal_id)
+            if item is None:
+                return self._not_found()
+            return self._success(serialize_item(item))
+
+        if route_path == "/control-plane/v1/audit/events":
+            query = AuditEventQuery(
+                correlation_id=_first_query_value(query_params, "correlation_id"),
+                occurred_after=_first_query_value(query_params, "occurred_after"),
+                occurred_before=_first_query_value(query_params, "occurred_before"),
+            )
+            return self._success(
+                {"items": serialize_items(self._query_backend.list_audit_events(query))}
+            )
+
+        if route_path.startswith("/control-plane/v1/audit/events/"):
+            event_id = route_path.removeprefix("/control-plane/v1/audit/events/")
+            item = self._query_backend.get_audit_event(event_id)
             if item is None:
                 return self._not_found()
             return self._success(serialize_item(item))
@@ -213,3 +236,10 @@ class ControlPlaneApp:
             .isoformat()
             .replace("+00:00", "Z"),
         }
+
+
+def _first_query_value(query_params: dict[str, list[str]], key: str) -> str | None:
+    values = query_params.get(key)
+    if not values:
+        return None
+    return values[0]
