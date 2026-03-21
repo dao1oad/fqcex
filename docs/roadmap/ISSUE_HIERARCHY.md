@@ -200,6 +200,7 @@
     - `#151 operator UI：增加只读验收控制台与 tradeability / recovery / audit 页面`
     - `#152 operator UI：增加受控 operator action 页面与审计联动验证`
     - `#168 live 部署：增加 control-plane 与 operator UI 的常驻入口`
+    - `#170 live 部署：加固常驻栈网络边界与宿主兼容性`
   - `#144 [Tracking] 执行三交易所 live canary 与 closeout`
     - `#153 live canary：执行 Bybit 单账户小资金验收并收集证据`
     - `#154 live canary：执行 Binance 单账户小资金验收并收集证据`
@@ -207,7 +208,7 @@
     - `#156 live canary：输出三交易所 closeout、残余风险与放量建议`
 
 建议执行顺序：
-`#145 -> #146 -> #147 -> #148 -> #149 -> #150 -> #151 -> #152 -> #153 -> #154 -> #155 -> #156`
+`#145 -> #146 -> #147 -> #148 -> #149 -> #150 -> #151 -> #152 -> #168 -> #170 -> #153 -> #154 -> #155 -> #156`
 
 ### 第 6 阶段
 

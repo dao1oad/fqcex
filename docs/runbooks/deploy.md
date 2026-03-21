@@ -4,6 +4,7 @@
 
 - 已安装 `docker`
 - 已安装 `docker compose` 或 `docker-compose`
+- 已安装 `python3`
 - 仓库内容已同步到目标主机
 - 已准备 `deploy/.env`
 - 已记录可回退的上一个 `PERP_PLATFORM_IMAGE_TAG`
@@ -76,7 +77,8 @@ sh deploy/scripts/bootstrap-server.sh /srv/perp-platform/deploy/.env
 该脚本会：
 
 - 检查 `docker` 是否可用
-- 检查 `docker compose` 是否可用
+- 检查 `python3`
+- 检查 `docker compose` 或 `docker-compose`
 - 创建 `deploy/state`
 - 校验传入的 env 文件是否存在
 
@@ -104,7 +106,7 @@ sh deploy/scripts/deploy.sh /srv/perp-platform/deploy/.env
 
 - 调用 `deploy/scripts/bootstrap-server.sh`
 - 构建 `control-plane` 与 `operator-ui`
-- 执行 `docker compose up -d`
+- 执行 `docker compose up -d` 或 `docker-compose up -d`
 - 校验 `control-plane` 健康接口
 - 校验 `operator-ui` 首页
 
@@ -112,8 +114,10 @@ sh deploy/scripts/deploy.sh /srv/perp-platform/deploy/.env
 
 最小成功信号是双服务都处于运行态，并且：
 
-- `http://127.0.0.1:8080/control-plane/v1/health` 返回 200
-- `http://127.0.0.1:4173/` 返回 200
+- `control-plane` 默认只绑定到宿主 `127.0.0.1`
+- `operator-ui` 默认只绑定到宿主 `127.0.0.1`
+- `http://127.0.0.1:$CONTROL_PLANE_PORT/control-plane/v1/health` 返回 200
+- `http://127.0.0.1:$OPERATOR_UI_PORT/` 返回 200
 
 详细人工验收清单见：
 

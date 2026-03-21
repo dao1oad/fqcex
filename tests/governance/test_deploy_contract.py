@@ -62,6 +62,9 @@ def test_compose_defines_dual_service_live_stack() -> None:
     assert "env_file:" in content
     assert '${LIVE_CANARY_ENV_FILE:-.env}' in content
     assert 'image: "${PERP_PLATFORM_IMAGE_REPO}:${PERP_PLATFORM_IMAGE_TAG}"' in content
+    assert '${CONTROL_PLANE_BIND_ADDRESS:-127.0.0.1}:${CONTROL_PLANE_PORT:-8080}:8080' in content
+    assert '${OPERATOR_UI_BIND_ADDRESS:-127.0.0.1}:${OPERATOR_UI_PORT:-4173}:80' in content
+    assert "restart: unless-stopped" in content
 
 
 def test_bootstrap_and_deploy_scripts_define_expected_commands() -> None:
@@ -71,10 +74,12 @@ def test_bootstrap_and_deploy_scripts_define_expected_commands() -> None:
     assert "docker compose version" in bootstrap
     assert 'ENV_FILE="${1:-$PROJECT_ROOT/deploy/.env}"' in bootstrap
     assert "mkdir -p" in bootstrap
+    assert "python3" in bootstrap
     assert "docker compose" in deploy
     assert "build" in deploy
     assert "up -d" in deploy
     assert 'ENV_FILE="${1:-$PROJECT_ROOT/deploy/.env}"' in deploy
+    assert "rm -sf control-plane operator-ui" in deploy
 
 
 def test_deploy_shell_scripts_are_tracked_as_executable() -> None:
@@ -96,3 +101,5 @@ def test_deploy_runbook_documents_live_stack_steps_and_success_signal() -> None:
     assert "deploy/scripts/deploy.sh" in content
     assert "Live Canary Preflight" in content
     assert "PERP_PLATFORM_IMAGE_TAG" in content
+    assert "python3" in content
+    assert "docker compose` 或 `docker-compose" in content

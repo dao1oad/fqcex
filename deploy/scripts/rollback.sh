@@ -35,8 +35,10 @@ fi
 
 if docker compose version >/dev/null 2>&1; then
   DOCKER_COMPOSE_BIN="docker compose"
+  DOCKER_COMPOSE_FLAVOR="plugin"
 elif command -v docker-compose >/dev/null 2>&1 && docker-compose version >/dev/null 2>&1; then
   DOCKER_COMPOSE_BIN="docker-compose"
+  DOCKER_COMPOSE_FLAVOR="standalone"
 else
   echo "docker compose or docker-compose is required but is not available" >&2
   exit 1
@@ -48,9 +50,15 @@ if [ -z "$IMAGE_REPO" ]; then
 fi
 
 TARGET_IMAGE="${IMAGE_REPO}:${PREVIOUS_TAG}"
+TARGET_UI_IMAGE="${IMAGE_REPO}-ui:${PREVIOUS_TAG}"
 
 if ! docker image inspect "$TARGET_IMAGE" >/dev/null 2>&1; then
   echo "target image is not available locally: $TARGET_IMAGE" >&2
+  exit 1
+fi
+
+if ! docker image inspect "$TARGET_UI_IMAGE" >/dev/null 2>&1; then
+  echo "UI target image is not available locally: $TARGET_UI_IMAGE" >&2
   exit 1
 fi
 
@@ -70,6 +78,9 @@ END {
 ' "$ENV_FILE" > "$TMP_ENV"
 
 echo "rolling back to ${TARGET_IMAGE}"
+if [ "$DOCKER_COMPOSE_FLAVOR" = "standalone" ]; then
+  LIVE_CANARY_ENV_FILE="$TMP_ENV" sh -c "$DOCKER_COMPOSE_BIN --env-file \"$TMP_ENV\" -f \"$COMPOSE_FILE\" rm -sf control-plane operator-ui || true"
+fi
 LIVE_CANARY_ENV_FILE="$TMP_ENV" sh -c "$DOCKER_COMPOSE_BIN --env-file \"$TMP_ENV\" -f \"$COMPOSE_FILE\" up -d --no-build --force-recreate control-plane operator-ui"
 
 CONTROL_PLANE_PORT=$(awk -F= '/^CONTROL_PLANE_PORT=/{print $2}' "$TMP_ENV")

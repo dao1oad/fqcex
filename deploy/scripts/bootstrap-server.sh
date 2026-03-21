@@ -11,6 +11,11 @@ if ! command -v docker >/dev/null 2>&1; then
   exit 1
 fi
 
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "python3 is required for host-side health checks but was not found in PATH" >&2
+  exit 1
+fi
+
 if docker compose version >/dev/null 2>&1; then
   DOCKER_COMPOSE_BIN="docker compose"
 elif command -v docker-compose >/dev/null 2>&1 && docker-compose version >/dev/null 2>&1; then

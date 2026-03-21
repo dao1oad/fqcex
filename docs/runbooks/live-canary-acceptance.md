@@ -23,6 +23,7 @@
 
 - `docker` 可用
 - `docker compose` 或 `docker-compose` 可用
+- `python3` 可用
 - 仓库代码已同步到目标主机
 - `/srv/perp-platform/state/kill-switch.flag` 存在
 - `/srv/perp-platform/secrets/bybit.env` 存在
@@ -36,7 +37,9 @@
 `/srv/perp-platform/deploy/.env` 至少应包含：
 
 - `PERP_PLATFORM_ENVIRONMENT=live-canary`
+- `CONTROL_PLANE_BIND_ADDRESS=127.0.0.1`
 - `CONTROL_PLANE_PORT=8080`
+- `OPERATOR_UI_BIND_ADDRESS=127.0.0.1`
 - `OPERATOR_UI_PORT=4173`
 - `LIVE_CANARY_ENABLED=true`
 - `LIVE_CANARY_ALLOWED_VENUES`
@@ -57,6 +60,11 @@ sh deploy/scripts/preflight-live.sh /srv/perp-platform/deploy/.env
 sh deploy/scripts/deploy.sh /srv/perp-platform/deploy/.env
 ```
 
+说明：
+
+- 脚本同时兼容 `docker compose` 与 `docker-compose`
+- 默认只把 `control-plane` / `operator-ui` 绑定到宿主 `127.0.0.1`
+
 ## 健康检查
 
 部署完成后必须逐项确认：
@@ -65,7 +73,7 @@ sh deploy/scripts/deploy.sh /srv/perp-platform/deploy/.env
 
 ```sh
 cd /srv/perp-platform/repo
-docker-compose --env-file /srv/perp-platform/deploy/.env -f deploy/docker-compose.yml ps
+docker compose --env-file /srv/perp-platform/deploy/.env -f deploy/docker-compose.yml ps
 ```
 
 预期：
@@ -73,12 +81,22 @@ docker-compose --env-file /srv/perp-platform/deploy/.env -f deploy/docker-compos
 - `control-plane` 为 `running`
 - `operator-ui` 为 `running`
 
+如果宿主只安装了独立版 compose，可等价改用：
+
+```sh
+docker-compose --env-file /srv/perp-platform/deploy/.env -f deploy/docker-compose.yml ps
+```
+
 ### 2. control-plane 健康接口
 
 ```sh
+export CONTROL_PLANE_PORT=$(awk -F= '/^CONTROL_PLANE_PORT=/{print $2}' /srv/perp-platform/deploy/.env)
+if [ -z "$CONTROL_PLANE_PORT" ]; then export CONTROL_PLANE_PORT=8080; fi
 python3 - <<'PY'
 import urllib.request
-print(urllib.request.urlopen("http://127.0.0.1:8080/control-plane/v1/health").read().decode())
+import os
+port = os.environ["CONTROL_PLANE_PORT"]
+print(urllib.request.urlopen(f"http://127.0.0.1:{port}/control-plane/v1/health").read().decode())
 PY
 ```
 
@@ -90,9 +108,13 @@ PY
 ### 3. operator UI 可访问
 
 ```sh
+export OPERATOR_UI_PORT=$(awk -F= '/^OPERATOR_UI_PORT=/{print $2}' /srv/perp-platform/deploy/.env)
+if [ -z "$OPERATOR_UI_PORT" ]; then export OPERATOR_UI_PORT=4173; fi
 python3 - <<'PY'
 import urllib.request
-print(urllib.request.urlopen("http://127.0.0.1:4173/").status)
+import os
+port = os.environ["OPERATOR_UI_PORT"]
+print(urllib.request.urlopen(f"http://127.0.0.1:{port}/").status)
 PY
 ```
 
@@ -103,9 +125,13 @@ PY
 ### 4. 深链接可访问
 
 ```sh
+export OPERATOR_UI_PORT=$(awk -F= '/^OPERATOR_UI_PORT=/{print $2}' /srv/perp-platform/deploy/.env)
+if [ -z "$OPERATOR_UI_PORT" ]; then export OPERATOR_UI_PORT=4173; fi
 python3 - <<'PY'
 import urllib.request
-print(urllib.request.urlopen("http://127.0.0.1:4173/actions").status)
+import os
+port = os.environ["OPERATOR_UI_PORT"]
+print(urllib.request.urlopen(f"http://127.0.0.1:{port}/actions").status)
 PY
 ```
 
