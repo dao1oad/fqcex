@@ -73,3 +73,19 @@ preflight 会阻断：
 ## 后续步骤
 
 preflight 通过后，再进入后续 live 安全闸门、operator UI 和 canary issue，不在本 runbook 中直接执行真实交易。
+
+## Kill Switch 约定
+
+`LIVE_CANARY_KILL_SWITCH_PATH` 指向的文件使用最小格式：
+
+```text
+armed=false
+```
+
+若文件不存在，或内容为 `armed=true`，则 live canary gate 必须拒绝放行。
+
+## Approval 入口
+
+进入 live canary 前，必须满足 operator approval。详细规则见：
+
+- `docs/runbooks/live-canary-approval.md`

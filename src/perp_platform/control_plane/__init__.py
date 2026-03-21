@@ -7,6 +7,14 @@ from .actions import (
     OperatorActionResult,
 )
 from .app import ControlPlaneApp, ControlPlaneResponse
+from .live_safety import (
+    FileBackedKillSwitch,
+    LiveCanaryApproval,
+    LiveCanaryDecision,
+    LiveCanaryRequest,
+    LiveSafetyGate,
+    LiveSafetyGateConfig,
+)
 from .queries import (
     AuditEventQuery,
     AuditEventView,
@@ -27,9 +35,15 @@ __all__ = [
     "ControlPlaneQueryBackend",
     "ControlPlaneResponse",
     "ForceResumePreconditions",
+    "FileBackedKillSwitch",
     "InMemoryControlPlaneQueryBackend",
     "InMemoryOperatorActionAuditHook",
     "InstrumentTradeabilityView",
+    "LiveCanaryApproval",
+    "LiveCanaryDecision",
+    "LiveCanaryRequest",
+    "LiveSafetyGate",
+    "LiveSafetyGateConfig",
     "OperatorActionRequest",
     "OperatorActionResult",
     "RecoveryRunView",
