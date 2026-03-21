@@ -88,6 +88,19 @@ See:
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
 - Security: [SECURITY.md](SECURITY.md)
 
+## Control Plane Skeleton
+
+Phase 5 的最小 control-plane skeleton 可用下面的方式本地启动：
+
+```bash
+python -m perp_platform.control_plane --host 127.0.0.1 --port 8080
+```
+
+当前最小可用端点：
+
+- `GET /control-plane/v1/health`
+- `GET /control-plane/v1/readiness`
+
 ## Memory System
 
 新会话建议按下面顺序恢复上下文：
