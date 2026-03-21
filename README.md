@@ -88,6 +88,7 @@ See:
 - Live canary acceptance: [docs/runbooks/live-canary-acceptance.md](docs/runbooks/live-canary-acceptance.md)
 - Live canary approval: [docs/runbooks/live-canary-approval.md](docs/runbooks/live-canary-approval.md)
 - Operator readonly UI: [docs/runbooks/operator-readonly-ui.md](docs/runbooks/operator-readonly-ui.md)
+- Operator UI acceptance manual: [docs/runbooks/operator-ui-acceptance-manual.md](docs/runbooks/operator-ui-acceptance-manual.md)
 - Governance: [GOVERNANCE.md](GOVERNANCE.md)
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
 - Security: [SECURITY.md](SECURITY.md)
