@@ -1,4 +1,5 @@
 from pathlib import Path
+from subprocess import run
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -6,6 +7,17 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 def read_text(path: str) -> str:
     return (REPO_ROOT / path).read_text(encoding="utf-8")
+
+
+def read_git_mode(path: str) -> str:
+    result = run(
+        ["git", "ls-files", "--stage", path],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return result.stdout.split()[0]
 
 
 def test_deploy_scaffold_files_exist() -> None:
@@ -61,6 +73,16 @@ def test_bootstrap_and_deploy_scripts_define_expected_commands() -> None:
     assert "build" in deploy
     assert "up -d" in deploy
     assert 'ENV_FILE="${1:-$PROJECT_ROOT/deploy/.env}"' in deploy
+
+
+def test_deploy_shell_scripts_are_tracked_as_executable() -> None:
+    for path in [
+        "deploy/scripts/bootstrap-server.sh",
+        "deploy/scripts/deploy.sh",
+        "deploy/scripts/preflight-live.sh",
+        "deploy/scripts/rollback.sh",
+    ]:
+        assert read_git_mode(path) == "100755"
 
 
 def test_deploy_runbook_documents_live_stack_steps_and_success_signal() -> None:
