@@ -94,3 +94,21 @@
 - control plane 只暴露 read-only audit query surface
 - 查询语义围绕 `event_id`、`event_type`、`correlation_id` 和时间窗口组织
 - 审计写入不通过 control-plane 查询接口进行
+
+## Retention Policy
+
+- structured audit events retain for at least 365 days
+- redacted incident closeout artifacts may outlive raw event windows when needed for governance evidence
+- raw sensitive attachments remain outside the repository and follow stricter private retention controls
+
+## Redaction Rules
+
+- redact account identifiers in shared audit views
+- redact credentials and tokens in every export path
+- redact venue-private operational details before moving evidence into public or wide-read contexts
+
+## Access Boundary
+
+- named operators may read full-fidelity evidence for active recovery and override decisions
+- developers receive redacted audit views by default
+- public artifacts only carry redacted summaries and references, never raw operator evidence

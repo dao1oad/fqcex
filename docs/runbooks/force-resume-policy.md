@@ -29,3 +29,9 @@
 - 发起前必须复核 latest recovery context
 - 发起前必须确认恢复完成、对账通过且没有未解释差异
 - 如果任一前提不满足，保持 `REDUCE_ONLY` 或 `BLOCKED`
+
+## Evidence Hygiene
+
+- redact account identifiers in any shared operator evidence
+- redact credentials and tokens before attaching artifacts to incidents or reviews
+- keep full-fidelity operator evidence inside the private operator context
