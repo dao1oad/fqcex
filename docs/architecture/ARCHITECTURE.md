@@ -24,6 +24,9 @@ Build a connection management platform for multi-exchange perpetual futures arbi
 - `Audit logs`
   - Recovery trail
   - Operator action trail
+- `Control Plane`
+  - Read-mostly projection surface for external operators and dashboards
+  - Projects `Supervisor`, store, checker, and audit views without taking truth ownership
 
 ## Phase 1 Topology
 
@@ -38,6 +41,7 @@ Build a connection management platform for multi-exchange perpetual futures arbi
 - Orders, positions, balances: Nautilus runtime path
 - Tradeability: Supervisor
 - Independent market suspicion signals: Cryptofeed checker
+- Control plane responses: projections from Supervisor/store/audit without changing truth ownership
 
 ## Checker Boundary
 
