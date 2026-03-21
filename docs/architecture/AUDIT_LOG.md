@@ -81,3 +81,16 @@
 - 审计事件只保留留痕和关联上下文
 - 审计事件不替代 `Supervisor`、runtime 或 store 的主真相
 - `correlation_id` 用于把 operator action、recovery run 和 incident closeout 串在同一链路上
+
+## Persistence Boundary
+
+- operator action、recovery 和 supervisor state change 事件进入 append-only PostgreSQL audit store
+- `audit_events` 只保存结构化审计事件，不承载订单、仓位、余额或 tradeability 真相
+- incident narratives remain outside PostgreSQL
+- dry-run evidence、人工 closeout 和外部 incident write-up 继续保留在 runbook 或外部证据层
+
+## Query Boundary
+
+- control plane 只暴露 read-only audit query surface
+- 查询语义围绕 `event_id`、`event_type`、`correlation_id` 和时间窗口组织
+- 审计写入不通过 control-plane 查询接口进行
