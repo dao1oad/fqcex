@@ -35,6 +35,19 @@
 
 执行干跑前，先复制或合并该模板到目标 `deploy/.env`，不要直接在生产 env 上临时修改。
 
+## Live Canary 模板
+
+`deploy/live-canary.env.example` 提供 Phase 5 小资金 live canary 的最小 env 契约。
+
+进入 live canary 前，先复制该模板到目标 `deploy/.env`，并补齐：
+
+- host-local credentials file paths
+- kill switch file path
+- venue / instrument allowlist
+- canary max notional
+
+不要把真实凭证写进仓库，也不要直接沿用 dry-run env 进入 live canary。
+
 ## Dry Run Operator Checklist
 
 启动前，操作员至少确认：
@@ -62,6 +75,18 @@ deploy/scripts/bootstrap-server.sh
 - 检查 `docker compose` 是否可用
 - 创建 `deploy/state`
 - 校验 `deploy/.env` 是否存在
+
+## Live Canary Preflight
+
+进入 live canary 前，先运行：
+
+```sh
+deploy/scripts/preflight-live.sh
+```
+
+它会在部署前阻断缺失 credentials file、缺失 allowlist 或缺失 kill switch 的环境。
+
+详细流程见 `docs/runbooks/live-canary-deploy.md`。
 
 ## 部署步骤
 

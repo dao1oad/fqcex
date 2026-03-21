@@ -84,6 +84,7 @@ See:
 - Codex cloud setup: [docs/runbooks/codex-cloud-setup.md](docs/runbooks/codex-cloud-setup.md)
 - Codex cloud security boundaries: [docs/runbooks/codex-cloud-security.md](docs/runbooks/codex-cloud-security.md)
 - Codex cloud execution boundary: [docs/architecture/CODEX_CLOUD_BOUNDARIES.md](docs/architecture/CODEX_CLOUD_BOUNDARIES.md)
+- Live canary deploy: [docs/runbooks/live-canary-deploy.md](docs/runbooks/live-canary-deploy.md)
 - Governance: [GOVERNANCE.md](GOVERNANCE.md)
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
 - Security: [SECURITY.md](SECURITY.md)
