@@ -1,5 +1,11 @@
 """Control-plane HTTP skeleton."""
 
+from .actions import (
+    ForceResumePreconditions,
+    InMemoryOperatorActionAuditHook,
+    OperatorActionRequest,
+    OperatorActionResult,
+)
 from .app import ControlPlaneApp, ControlPlaneResponse
 from .queries import (
     CheckerSignalView,
@@ -16,8 +22,12 @@ __all__ = [
     "ControlPlaneApp",
     "ControlPlaneQueryBackend",
     "ControlPlaneResponse",
+    "ForceResumePreconditions",
     "InMemoryControlPlaneQueryBackend",
+    "InMemoryOperatorActionAuditHook",
     "InstrumentTradeabilityView",
+    "OperatorActionRequest",
+    "OperatorActionResult",
     "RecoveryRunView",
     "VenueTradeabilityView",
     "create_control_plane_server",

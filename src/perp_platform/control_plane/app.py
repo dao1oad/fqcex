@@ -4,6 +4,12 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from uuid import uuid4
 
+from .actions import (
+    ForceResumePreconditions,
+    InMemoryOperatorActionAuditHook,
+    OperatorActionRequest,
+    OperatorActionResult,
+)
 from .queries import (
     ControlPlaneQueryBackend,
     InMemoryControlPlaneQueryBackend,
@@ -21,16 +27,25 @@ class ControlPlaneResponse:
 class ControlPlaneApp:
     """Minimal control-plane request dispatcher."""
 
-    def __init__(self, query_backend: ControlPlaneQueryBackend | None = None) -> None:
+    def __init__(
+        self,
+        query_backend: ControlPlaneQueryBackend | None = None,
+        audit_hook: InMemoryOperatorActionAuditHook | None = None,
+    ) -> None:
         self._query_backend = query_backend or InMemoryControlPlaneQueryBackend()
+        self._audit_hook = audit_hook or InMemoryOperatorActionAuditHook()
 
-    def handle(self, method: str, path: str) -> ControlPlaneResponse:
+    def handle(
+        self,
+        method: str,
+        path: str,
+        payload: dict | None = None,
+    ) -> ControlPlaneResponse:
+        if method == "POST":
+            return self._handle_post(path, payload)
+
         if method != "GET":
-            return self._error(
-                status_code=405,
-                code="invalid_request",
-                message="control plane method not allowed",
-            )
+            return self._invalid_request("control plane method not allowed")
 
         if path == "/control-plane/v1/health":
             return self._success({"service": "control-plane", "status": "ok"})
@@ -84,11 +99,66 @@ class ControlPlaneApp:
                 return self._not_found()
             return self._success(serialize_item(item))
 
-        return self._error(
-            status_code=404,
-            code="not_found",
-            message="control plane resource not found",
+        return self._not_found()
+
+    def _handle_post(self, path: str, payload: dict | None) -> ControlPlaneResponse:
+        if path.startswith("/control-plane/v1/operator-actions/"):
+            action_name = path.removeprefix("/control-plane/v1/operator-actions/")
+            return self._handle_operator_action(action_name, payload)
+
+        return self._invalid_request("control plane method not allowed")
+
+    def _handle_operator_action(
+        self,
+        action_name: str,
+        payload: dict | None,
+    ) -> ControlPlaneResponse:
+        if payload is None:
+            return self._invalid_request("control plane request body is required")
+
+        for field in ("action_type", "target_scope", "requested_by", "reason", "requested_at"):
+            if field not in payload:
+                return self._invalid_request(f"missing required field: {field}")
+
+        if payload["action_type"] != action_name:
+            return self._invalid_request("action_type does not match request path")
+
+        preconditions = None
+        if payload.get("preconditions") is not None:
+            preconditions = ForceResumePreconditions(**payload["preconditions"])
+
+        request = OperatorActionRequest(
+            action_type=payload["action_type"],
+            target_scope=payload["target_scope"],
+            requested_by=payload["requested_by"],
+            reason=payload["reason"],
+            requested_at=payload["requested_at"],
+            preconditions=preconditions,
         )
+
+        if request.action_type == "force_resume":
+            if request.preconditions is None:
+                return self._conflict(
+                    "force_resume requires satisfied recovery and reconciliation preconditions"
+                )
+            if (
+                not request.preconditions.recovery_completed
+                or not request.preconditions.reconciliation_passed
+                or request.preconditions.has_critical_diffs
+            ):
+                return self._conflict(
+                    "force_resume requires completed recovery, passed reconciliation, and no critical diffs"
+                )
+
+        audit_event_id = self._audit_hook.record(request)
+        result = OperatorActionResult(
+            action_type=request.action_type,
+            target_scope=request.target_scope,
+            requested_by=request.requested_by,
+            requested_at=request.requested_at,
+            audit_event_id=audit_event_id,
+        )
+        return self._success(serialize_item(result))
 
     def _success(self, data: dict) -> ControlPlaneResponse:
         return ControlPlaneResponse(
@@ -120,6 +190,20 @@ class ControlPlaneApp:
             status_code=404,
             code="not_found",
             message="control plane resource not found",
+        )
+
+    def _invalid_request(self, message: str) -> ControlPlaneResponse:
+        return self._error(
+            status_code=400,
+            code="invalid_request",
+            message=message,
+        )
+
+    def _conflict(self, message: str) -> ControlPlaneResponse:
+        return self._error(
+            status_code=409,
+            code="conflict",
+            message=message,
         )
 
     def _meta(self) -> dict:
