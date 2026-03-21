@@ -57,7 +57,18 @@ Build a connection management platform for multi-exchange perpetual futures arbi
 1. 先冻结 control-plane api surface、operator action boundary 和 read models
 2. 再冻结 audit 事件、存储边界与运行手册
 3. 保持 runtime、Supervisor、store 的主真相链路不变
-4. 仅在文档边界稳定后，才考虑后续 transport、service split 或控制平面实现
+4. 在文档边界稳定后，先进入 live readiness 阶段，落地最小 control-plane backend、operator gate、audit query 和 live canary 闭环
+5. 仅在 live readiness closeout 完成后，才考虑 native adapter 替换、service split 或更激进的平台拆分
+
+## Live Readiness Boundary
+
+- `NautilusTrader runtime` 继续负责真实 venue 连接、执行、reconciliation 和订单 / 仓位 / 余额真相
+- `Supervisor` 继续负责 tradeability truth 与 `LIVE / DEGRADED / RESYNCING / REDUCE_ONLY / BLOCKED` 投影
+- `Control Plane` 在 live readiness 阶段实现为 read-mostly service：
+  - 暴露 venue / instrument / recovery / checker / audit 投影视图
+  - 提供受控 operator actions
+- `Audit logs` 继续是 append-only trail，不替代 runtime/store/Supervisor 真相
+- live canary 的 closeout 只代表小资金、受控 allowlist 范围内的真实环境验收，不自动升级为大规模放量许可
 
 ## Checker Boundary
 

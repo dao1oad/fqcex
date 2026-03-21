@@ -188,16 +188,38 @@
 
 ### 第 5 阶段
 
-- `#6 [Epic] 第 5 阶段：Tier-1 原生适配器`
+- `#141 [Epic] 第 5 阶段：Live Readiness 与 Canary 验收`
+  - `#142 [Tracking] 落地最小控制平面与审计查询`
+    - `#145 控制平面实现：增加只读 HTTP 服务骨架与 health/readiness`
+    - `#146 控制平面实现：落地 venue / instrument / recovery / checker 读模型查询接口`
+    - `#147 控制平面实现：落地 operator action 写接口与前提校验`
+    - `#148 控制平面实现：落地 audit event 查询接口与相关测试`
+  - `#143 [Tracking] 构建 live 环境、安全闸门与 operator UI`
+    - `#149 live 部署：定义 production-like env、secrets、host runbook 与 preflight`
+    - `#150 live 安全闸门：实现 max notional、最小交易对 allowlist、kill switch 与 operator approval`
+    - `#151 operator UI：增加只读验收控制台与 tradeability / recovery / audit 页面`
+    - `#152 operator UI：增加受控 operator action 页面与审计联动验证`
+  - `#144 [Tracking] 执行三交易所 live canary 与 closeout`
+    - `#153 live canary：执行 Bybit 单账户小资金验收并收集证据`
+    - `#154 live canary：执行 Binance 单账户小资金验收并收集证据`
+    - `#155 live canary：执行 OKX 单账户小资金验收并收集证据`
+    - `#156 live canary：输出三交易所 closeout、残余风险与放量建议`
+
+建议执行顺序：
+`#145 -> #146 -> #147 -> #148 -> #149 -> #150 -> #151 -> #152 -> #153 -> #154 -> #155 -> #156`
+
+### 第 6 阶段
+
+- `#6 [Epic] 第 6 阶段：Tier-1 原生适配器`
   - `#22 [Tracking] 设计 Tier-1 原生适配器接口与替换策略`
     - `#71 原生适配器策略：定义适配器接口与安全不变量`
     - `#72 原生适配器策略：规划 Tier-1 替换顺序`
     - `#73 原生适配器策略：定义影子验证与一致性校验`
     - `#74 原生适配器策略：定义回滚与回退规则`
 
-### 第 6 阶段
+### 第 7 阶段
 
-- `#7 [Epic] 第 6 阶段：扩展与高可用`
+- `#7 [Epic] 第 7 阶段：扩展与高可用`
   - `#23 [Tracking] 定义高可用与多账户扩展策略`
     - `#75 高可用与多账户策略：定义租户与账户模型`
     - `#76 高可用与多账户策略：定义高可用拓扑与故障切换职责`
