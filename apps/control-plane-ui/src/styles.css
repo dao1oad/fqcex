@@ -1,0 +1,265 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
+
+:root {
+  font-family: "IBM Plex Sans", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #d9ddd7;
+  background:
+    radial-gradient(circle at top left, rgba(48, 93, 88, 0.24), transparent 28%),
+    linear-gradient(135deg, #111816 0%, #18211d 40%, #0d1211 100%);
+  --panel: rgba(17, 24, 22, 0.78);
+  --panel-border: rgba(210, 220, 214, 0.14);
+  --text-muted: #9dad9f;
+  --accent: #c8a15d;
+  --ok: #7fd4b3;
+  --warn: #f0b15a;
+  --danger: #de7f74;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  padding: 32px 24px;
+  border-right: 1px solid var(--panel-border);
+  background: rgba(9, 14, 13, 0.82);
+  backdrop-filter: blur(20px);
+}
+
+.sidebar h1,
+.page h2,
+.section-heading h3 {
+  margin: 0;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+}
+
+.sidebar-copy {
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.nav {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.nav a {
+  padding: 14px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.nav a.active {
+  color: #f3f5f2;
+  border-color: rgba(200, 161, 93, 0.35);
+  background: rgba(200, 161, 93, 0.12);
+}
+
+.closeout-card,
+.table-card,
+.status-card,
+.timeline-card,
+.search-card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+}
+
+.closeout-card {
+  padding: 18px;
+}
+
+.closeout-card p {
+  color: var(--text-muted);
+}
+
+.main-panel {
+  padding: 32px;
+}
+
+.page {
+  display: grid;
+  gap: 24px;
+}
+
+.page-header p {
+  color: var(--text-muted);
+  max-width: 720px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.status-card,
+.timeline-card,
+.search-card,
+.table-card {
+  padding: 20px;
+}
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.badge {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.badge-live,
+.badge-ready {
+  background: rgba(127, 212, 179, 0.14);
+  color: var(--ok);
+}
+
+.badge-degraded,
+.badge-running {
+  background: rgba(240, 177, 90, 0.16);
+  color: var(--warn);
+}
+
+.badge-reduce_only,
+.badge-blocked {
+  background: rgba(222, 127, 116, 0.16);
+  color: var(--danger);
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.metric-grid dt {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.metric-grid dd {
+  margin: 6px 0 0;
+  font-weight: 600;
+}
+
+.section-heading p,
+.timeline-card p {
+  color: var(--text-muted);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 18px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+thead th {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+}
+
+.stack {
+  display: grid;
+  gap: 16px;
+}
+
+.timeline-phase {
+  color: #eff3ee;
+  font-weight: 600;
+}
+
+.mono,
+code {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.search-card {
+  display: grid;
+  gap: 10px;
+}
+
+.search-card span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.search-card input {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  background: rgba(8, 12, 11, 0.86);
+  color: #f3f5f2;
+  padding: 12px 14px;
+  font: inherit;
+}
+
+@media (max-width: 960px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .main-panel {
+    padding: 24px;
+  }
+}

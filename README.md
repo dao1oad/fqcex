@@ -30,7 +30,7 @@ Private repository for a perpetual futures connection platform focused on multi-
 
 - `governance-check` verifies the repository governance baseline files.
 - `python-check` runs on Python `3.12`.
-- `python-check` installs the package with `python -m pip install -e .`.
+- `python-check` installs the package with `python -m pip install -e '.[test]'`.
 - `python-check` runs the full suite with `python -m pytest tests -q`.
 - Docker, smoke, and deploy checks remain out of this minimal CI scope.
 
@@ -52,7 +52,7 @@ For manual setup without the helper script:
 
 ```bash
 python -m pip install --upgrade pip
-python -m pip install -e .
+python -m pip install -e '.[test]'
 ```
 
 ## Codex Cloud Security Boundary
@@ -86,6 +86,7 @@ See:
 - Codex cloud execution boundary: [docs/architecture/CODEX_CLOUD_BOUNDARIES.md](docs/architecture/CODEX_CLOUD_BOUNDARIES.md)
 - Live canary deploy: [docs/runbooks/live-canary-deploy.md](docs/runbooks/live-canary-deploy.md)
 - Live canary approval: [docs/runbooks/live-canary-approval.md](docs/runbooks/live-canary-approval.md)
+- Operator readonly UI: [docs/runbooks/operator-readonly-ui.md](docs/runbooks/operator-readonly-ui.md)
 - Governance: [GOVERNANCE.md](GOVERNANCE.md)
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
 - Security: [SECURITY.md](SECURITY.md)
@@ -137,3 +138,21 @@ python -m perp_platform.control_plane --host 127.0.0.1 --port 8080
 3. 然后运行 `python scripts/update_project_memory.py`
 4. 如需 Linux/Bash 下完整验证，可运行 `python -m pytest tests -q`
 5. 如需终端快速概览，可选运行 `powershell -ExecutionPolicy Bypass -File scripts/project_context.ps1`（Windows-only）
+
+## Operator Readonly UI
+
+第 5 阶段的最小只读验收控制台位于：
+
+- `apps/control-plane-ui`
+
+安装依赖：
+
+```bash
+npm --prefix apps/control-plane-ui install
+```
+
+启动：
+
+```bash
+npm --prefix apps/control-plane-ui run dev -- --host 127.0.0.1 --port 4173
+```

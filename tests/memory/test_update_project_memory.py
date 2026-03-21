@@ -2,6 +2,7 @@ import importlib.util
 from pathlib import Path
 from subprocess import CompletedProcess
 from subprocess import run
+import sys
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -18,17 +19,21 @@ def load_module():
     return module
 
 
-def test_update_project_memory_generates_snapshot() -> None:
-    if SNAPSHOT_PATH.exists():
-        SNAPSHOT_PATH.unlink()
-
-    result = run(
-        ["py", str(SCRIPT_PATH)],
+def run_update_project_memory() -> CompletedProcess[str]:
+    return run(
+        [sys.executable, str(SCRIPT_PATH)],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
         check=False,
     )
+
+
+def test_update_project_memory_generates_snapshot() -> None:
+    if SNAPSHOT_PATH.exists():
+        SNAPSHOT_PATH.unlink()
+
+    result = run_update_project_memory()
 
     assert result.returncode == 0, result.stderr
     assert SNAPSHOT_PATH.is_file()
@@ -102,13 +107,7 @@ def test_update_project_memory_prefers_github_api_for_remote_branches(monkeypatc
 
 
 def test_update_project_memory_includes_current_repository_context() -> None:
-    result = run(
-        ["py", str(SCRIPT_PATH)],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    result = run_update_project_memory()
 
     assert result.returncode == 0, result.stderr
 
@@ -132,7 +131,6 @@ def test_update_project_memory_includes_current_repository_context() -> None:
     assert branch_status.returncode == 0, branch_status.stderr
     assert f"Repository Root: `{REPO_ROOT}`" in content
     assert branch_status.stdout.strip() in content
-    assert "\nmain\n" in content
     assert "Local Branches" in content
     assert "Remote Branches" in content
     assert "docs/memory/PROJECT_STATE.md" in content

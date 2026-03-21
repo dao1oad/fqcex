@@ -16,7 +16,7 @@ bash scripts/codex_cloud_setup.sh
 
 ```bash
 python -m pip install --upgrade pip
-python -m pip install -e .
+python -m pip install -e '.[test]'
 ```
 
 ## Verification

@@ -2,7 +2,8 @@
   "name": "perp-platform-smoke",
   "private": true,
   "scripts": {
-    "smoke:e2e": "playwright test tests/e2e/smoke.spec.ts"
+    "smoke:e2e": "playwright test tests/e2e/smoke.spec.ts",
+    "ui:e2e": "playwright test tests/e2e/operator-readonly-ui.spec.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2"
