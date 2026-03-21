@@ -141,7 +141,7 @@ python -m perp_platform.control_plane --host 127.0.0.1 --port 8080
 
 ## Operator Readonly UI
 
-第 5 阶段的最小只读验收控制台位于：
+第 5 阶段的最小 operator 验收控制台位于：
 
 - `apps/control-plane-ui`
 
@@ -156,3 +156,16 @@ npm --prefix apps/control-plane-ui install
 ```bash
 npm --prefix apps/control-plane-ui run dev -- --host 127.0.0.1 --port 4173
 ```
+
+当前页面：
+
+- `/tradeability`
+- `/recovery`
+- `/audit`
+- `/actions`
+
+`/actions` 当前仍是 fixture-backed acceptance flow，不接真实写接口，但已经覆盖：
+
+- action 前提展示
+- disabled submit gating
+- action -> audit echo 联动
