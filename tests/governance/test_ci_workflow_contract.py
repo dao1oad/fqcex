@@ -1,4 +1,5 @@
 from pathlib import Path
+import tomllib
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -6,6 +7,15 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 def read_text(path: str) -> str:
     return (REPO_ROOT / path).read_text(encoding="utf-8")
+
+
+def test_pyproject_declares_test_dependencies() -> None:
+    content = (REPO_ROOT / "pyproject.toml").read_bytes()
+    parsed = tomllib.loads(content.decode("utf-8"))
+
+    optional = parsed["project"]["optional-dependencies"]
+    assert "test" in optional
+    assert any(dep.startswith("pytest") for dep in optional["test"])
 
 
 def test_ci_workflow_defines_python_check() -> None:
@@ -18,7 +28,7 @@ def test_ci_workflow_uses_python_312_and_editable_install() -> None:
     content = read_text(".github/workflows/ci.yml")
 
     assert 'python-version: "3.12"' in content
-    assert "python -m pip install -e ." in content
+    assert "python -m pip install -e '.[test]'" in content
 
 
 def test_ci_workflow_runs_full_test_suite() -> None:

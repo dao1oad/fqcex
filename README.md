@@ -30,7 +30,7 @@ Private repository for a perpetual futures connection platform focused on multi-
 
 - `governance-check` verifies the repository governance baseline files.
 - `python-check` runs on Python `3.12`.
-- `python-check` installs the package with `python -m pip install -e .`.
+- `python-check` installs the package with `python -m pip install -e '.[test]'`.
 - `python-check` runs the full suite with `python -m pytest tests -q`.
 - Docker, smoke, and deploy checks remain out of this minimal CI scope.
 
@@ -52,7 +52,7 @@ For manual setup without the helper script:
 
 ```bash
 python -m pip install --upgrade pip
-python -m pip install -e .
+python -m pip install -e '.[test]'
 ```
 
 ## Codex Cloud Security Boundary

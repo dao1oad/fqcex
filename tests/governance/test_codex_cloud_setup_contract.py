@@ -15,14 +15,14 @@ def test_codex_cloud_setup_script_exists_and_installs_package() -> None:
     content = script_path.read_text(encoding="utf-8")
     assert "#!/usr/bin/env bash" in content
     assert "python -m pip install --upgrade pip" in content
-    assert "python -m pip install -e ." in content
+    assert "python -m pip install -e '.[test]'" in content
 
 
 def test_readme_documents_linux_bash_setup_and_verification() -> None:
     content = read_text("README.md")
 
     assert "Codex cloud" in content or "Linux/Bash" in content
-    assert "python -m pip install -e ." in content
+    assert "python -m pip install -e '.[test]'" in content
     assert "python -m pytest tests -q" in content
 
 

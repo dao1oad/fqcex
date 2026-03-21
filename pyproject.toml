@@ -11,6 +11,11 @@ dependencies = [
     "cryptofeed>=2.4,<3",
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest>=8,<9",
+]
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 
