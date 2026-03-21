@@ -21,3 +21,11 @@
 - Timestamp
 - Target venue or instrument
 - Audit trail entry
+
+## Permission Boundary
+
+- `force_resume` 只允许 named human operator 发起
+- Codex cloud、自动化任务和只读客户端不得持有 `force_resume` 写权限
+- 发起前必须复核 latest recovery context
+- 发起前必须确认恢复完成、对账通过且没有未解释差异
+- 如果任一前提不满足，保持 `REDUCE_ONLY` 或 `BLOCKED`

@@ -76,7 +76,7 @@
 
 ### Operator Actions
 
-动作入口只定义资源族和稳定动作名，本 issue 不细化权限与 payload。
+动作入口定义最小动作模型与权限边界，但不实现 transport、auth middleware 或完整 RBAC。
 
 最小动作名：
 
@@ -84,7 +84,25 @@
 - `POST /control-plane/v1/operator-actions/force_block`
 - `POST /control-plane/v1/operator-actions/force_resume`
 
-权限边界、payload、结果模型和审计联动细节延后到 `#68`。
+最小动作请求字段：
+
+- `action_type`
+- `target_scope`
+- `requested_by`
+- `reason`
+- `requested_at`
+
+### Action Permission Boundary
+
+- `GET` 资源默认面向 read-only clients
+- 写动作只允许 named human operator 发起
+- automation、Codex cloud task 和只读 token 不得调用 operator write actions
+- `force_reduce_only` 只能收紧可交易性，不能恢复交易
+- `force_block` 只能提升到更严格的人工阻断态，不能直接恢复交易
+- `force_resume` 只能在恢复和对账前提满足后请求执行
+- `force_resume` cannot bypass unresolved recovery or reconciliation prerequisites
+
+动作 payload 的扩展字段、审批链和审计事件联动细节延后到 `#85`。
 
 ## Response Envelope
 
@@ -145,6 +163,6 @@
 
 ## Follow-On Issues
 
-- `#68` 细化 operator action 模型与权限边界
 - `#69` 细化 venue/instrument/recovery 读模型字段
 - `#70` 发布平台化切分边界与迁移计划
+- `#85` 定义操作员动作与恢复事件模型
