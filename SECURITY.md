@@ -72,6 +72,15 @@ The following controls apply to operator actions:
 - write actions must remain auditable
 - cloud automation must not receive control-plane write tokens
 
+## Audit Data Governance
+
+- structured audit events must be retained for at least 365 days
+- redact account identifiers before audit data leaves the private operator context
+- redact credentials in all audit exports, runbooks, and incident attachments
+- named operators may access full-fidelity operator evidence needed for recovery decisions
+- developers receive redacted audit views unless explicit incident handling requires tighter access
+- public artifacts must never contain live credentials, full account identifiers, or unredacted operator tokens
+
 ## Public Issue Guidance
 
 If the issue is not sensitive, you may open a public bug or ops issue.
