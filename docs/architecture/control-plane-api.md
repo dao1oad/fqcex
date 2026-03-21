@@ -103,6 +103,17 @@
 
 具体 read model 字段与投影细节延后到 `#69`。
 
+### Audit Events
+
+面向审计留痕的 read-only audit query surface。
+
+最小资源面：
+
+- `GET /control-plane/v1/audit/events`
+- `GET /control-plane/v1/audit/events/{event_id}`
+
+该查询面只消费 `audit_events` 和相关 `correlation_id` 关联上下文，不提供审计写入入口。
+
 ### Operator Actions
 
 动作入口定义最小动作模型与权限边界，但不实现 transport、auth middleware 或完整 RBAC。

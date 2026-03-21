@@ -92,3 +92,11 @@
 - 读取来源：`recovery_runs`
 - 投影字段：`run_id`、`phase`、`status`、`trigger_reason`、`blockers_json`
 - 语义：对外暴露恢复过程状态与阻断原因
+
+## Audit Storage Boundary
+
+- `audit_events`
+  - 归属：append-only PostgreSQL 审计层
+  - 作用：保存 operator action、recovery 和 supervisor state change 的结构化留痕
+  - 约束：not part of the core trading truth tables
+- incident narrative、dry-run evidence 和外部 closeout 文档不进入 `audit_events`
