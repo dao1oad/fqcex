@@ -4,53 +4,58 @@
 
 `fqcex` 是一个面向多交易所永续合约套利的连接管理平台。
 
-## Phase 1 范围
+## 当前主线状态
+
+- 本地 `main` 已与 `origin/main` 对齐。
+- 当前远端主线最新提交为 `be28010a047f493c48e4fddc6e9d00fb1d84584f`。
+- GitHub 上已完成并关闭：
+  - Phase 1 epic `#2`
+  - Phase 2 epic `#3`
+  - Phase 3 epic `#4`
+
+## 冻结范围
 
 - 交易所：`Bybit`、`Binance`、`OKX`
 - 产品范围：`USDT` 线性永续
 - 主 runtime：`NautilusTrader`
-- 交易可用性真相源：自建 `Supervisor`
+- 交易可用性真相源：`Supervisor`
 - 独立公共行情校验：`Cryptofeed`
 
-## 主架构
+## 当前主线已完成能力
 
-- 订单、仓位、余额真相以主 runtime 链路为准。
-- `Supervisor` 决定交易是否可继续。
-- `Cryptofeed` 只提供公共行情校验输入。
-- 交易所差异停留在边界层，不污染核心数据模型。
-- 内部统一使用 `base_qty` 和 `mark_price` 作为核心真相口径。
+### Phase 1
 
-## 已完成基础设施
+- `perp_platform` Python 包、入口点、配置契约、共享测试基座
+- 统一合约标识、市场枚举、数量归一化与 OKX 张数换算
+- Bybit 运行时初始化、恢复、对账、`REDUCE_ONLY / BLOCKED` 投影
+- Codex cloud 仓库迁移与主 agent / cloud dry run 基座
 
-- 仓库治理骨架已建立，包含 `GOVERNANCE.md`、`CONTRIBUTING.md`、`SECURITY.md`。
-- GitHub 侧已建立 roadmap milestones、labels、epics 和首批 issues。
-- `main` 分支已包含治理基础和项目记忆系统。
-- `main` 分支已按 issue 顺序合入 `#25-#27`：
-  - 建立 `perp_platform` 最小 Python 包与模块入口
-  - 建立最小配置初始化契约 `AppConfig` / `load_config()`
-  - 建立共享测试基座 `tests/perp_platform/support`
-- GitHub issue 树已补齐 `#79-#83`，用于承接 Phase 1 的 worktree/CI/部署基座缺口。
-- GitHub issue 树已补齐 `#84-#88`，用于承接 Phase 4 的审计留痕设计缺口。
-- `codex/ci-cd-bootstrap` 分支仍有 2 个未合并提交，但基于旧基线；当前应作为 `#79-#83` 的参考来源，而不是直接合并目标。
-- `codex/perp-platform-bootstrap` worktree 仍存在，但该分支相对 `main` 已无独有提交，不应继续作为应用骨架现状真相源。
+### Phase 2
 
-## 当前冻结边界
+- Supervisor 状态机、触发器、交易所级与交易对级投影
+- PostgreSQL truth schema、订单 / 仓位 / 余额 / 可交易性 / 恢复仓储
+- Binance USDⓈ-M 基线运行时与恢复退避
+- OKX USDT 永续运行时、张数换算与约束回归
 
-- `one_way`
-- `isolated`
-- 默认杠杆 `2x`
-- 硬上限 `3x`
-- `LIMIT`、`MARKET`、`CANCEL`
-- `GTC`、`IOC`
-- `reduce_only`
+### Phase 3
 
-## 当前不做
+- Cryptofeed checker bootstrap、feeds、policies、signals
+- 故障注入工具：
+  - `inject_ws_disconnect.py`
+  - `inject_private_silence.py`
+  - `inject_reconcile_diff.py`
+- 干跑配置、安全闸门、审计采集
+- `repository-scoped` BTC / ETH 干跑证据与 closeout：
+  - `docs/plans/dry-run-evidence.md`
+  - `docs/plans/dry-run-closeout.md`
 
-- 现货
-- 币本位合约
-- 交割合约
-- 期权
-- `hedge mode`
-- `cross margin`
-- 复杂条件单 / algo order
-- Hummingbot 进入生产 runtime
+## 运行边界说明
+
+- Phase 3 的干跑结论只覆盖 `repository-scoped` 受控演练。
+- 当前主线**不**声称真实交易所 `live/testnet` 演练、真实下单或真实资金路径已完成验证。
+
+## 下一阶段
+
+- 下一个待执行 epic 是 Phase 4：`#5 [史诗] 第 4 阶段：平台化`
+- 当前顺序入口是 `#21 [跟踪] 设计外部控制平面与操作员 API`
+- 第一个 ready child issue 是 `#67 控制平面设计：定义外部 API 表面`

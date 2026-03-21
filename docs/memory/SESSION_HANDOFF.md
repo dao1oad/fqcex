@@ -4,33 +4,31 @@
 
 1. `docs/memory/PROJECT_STATE.md`
 2. `docs/memory/ACTIVE_WORK.md`
-3. `README.md`
-4. `docs/roadmap/ROADMAP.md`
-5. `docs/architecture/ARCHITECTURE.md`
-6. `docs/plans/2026-03-19-backlog-review-roadmap-alignment.md`
-7. `docs/plans/2026-03-18-project-memory-system-design.md`
+3. `docs/memory/generated/project_snapshot.md`
+4. `docs/roadmap/ISSUE_HIERARCHY.md`
+5. `docs/roadmap/ROADMAP.md`
+6. `docs/architecture/ARCHITECTURE.md`
+7. `docs/plans/dry-run-closeout.md`
 
 ## 新会话先跑什么
 
 ```powershell
 git status --short --branch
-git branch --all
+git fetch origin
+git merge --ff-only origin/main
 git worktree list
-git log --oneline -10
+git log --oneline -10 origin/main
 py scripts/update_project_memory.py
-powershell -ExecutionPolicy Bypass -File scripts/project_context.ps1
 ```
 
 ## 当前建议切入点
 
-- 如果要继续完善治理和上下文恢复，先检查 `docs/memory/generated/project_snapshot.md` 是否已经反映当前分支和 worktree 状态。
-- 如果要继续开发交付能力，优先按 `#79-#83` 推进，并把 `codex/ci-cd-bootstrap` 只当参考分支。
-- `#25-#27` 已进入 `main`；如果继续开发应用骨架之后的内容，直接从当前 `main` 往下做，不要再回到 `codex/perp-platform-bootstrap`。
-- 如果后续再次扩展 memory 快照测试，保持“当前仓库上下文”契约，不要把断言重新硬编码为 `main`。
+- 不要再从 Phase 1-3 的旧 worktree 恢复开发。
+- 直接以当前 `main` 为基线，按 Phase 4 顺序从 `#67` 开始。
+- 如果会话目标涉及 issue / PR / 分支 / worktree 状态，先运行 `py scripts/update_project_memory.py`。
 
 ## 注意事项
 
-- 任何会改变 Phase 1 边界、主架构、运行安全规则的改动，都先更新记忆文件和治理文档。
-- 任何 feature branch 的成果都不要直接当成 `main` 的已完成状态。
-- 已合并或已删除的 feature branch，不要继续留在 `ACTIVE_WORK` 或生成快照里。
-- 本次 `main` 推送曾绕过必需状态检查 `governance-check`；下一轮应优先恢复正常 CI / PR 护栏。
+- `docs/plans/dry-run-evidence.md` 和 `docs/plans/dry-run-closeout.md` 已经是 Phase 3 的正式结论入口。
+- Phase 3 的结论只代表 `repository-scoped` 干跑，不要在后续文档里误写成真实交易所 live/testnet 已验证。
+- `.codex/` 是本地运行态目录；需要主线真相时，以 GitHub issue / PR、`origin/main` 和仓库文档为准。
