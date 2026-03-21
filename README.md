@@ -100,6 +100,14 @@ python -m perp_platform.control_plane --host 127.0.0.1 --port 8080
 
 - `GET /control-plane/v1/health`
 - `GET /control-plane/v1/readiness`
+- `GET /control-plane/v1/venues`
+- `GET /control-plane/v1/venues/{venue}`
+- `GET /control-plane/v1/instruments`
+- `GET /control-plane/v1/instruments/{instrument_id}`
+- `GET /control-plane/v1/recovery/runs`
+- `GET /control-plane/v1/recovery/runs/{run_id}`
+- `GET /control-plane/v1/checker/signals`
+- `GET /control-plane/v1/checker/signals/{signal_id}`
 
 ## Memory System
 
