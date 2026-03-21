@@ -9,6 +9,10 @@
 - audit events
 - 受控 operator actions 与 audit echo
 
+如果你要按页面逐项做人工验收，直接使用：
+
+- `docs/runbooks/operator-ui-acceptance-manual.md`
+
 ## 当前边界
 
 该 UI 当前只消费静态 adapter 数据，用于人工 closeout 演示和验收。
