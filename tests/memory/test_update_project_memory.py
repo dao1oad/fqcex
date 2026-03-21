@@ -132,7 +132,7 @@ def test_update_project_memory_includes_current_repository_context() -> None:
     assert branch_status.returncode == 0, branch_status.stderr
     assert f"Repository Root: `{REPO_ROOT}`" in content
     assert branch_status.stdout.strip() in content
-    assert "codex/ci-cd-bootstrap" in content
+    assert "\nmain\n" in content
     assert "Local Branches" in content
     assert "Remote Branches" in content
     assert "docs/memory/PROJECT_STATE.md" in content
