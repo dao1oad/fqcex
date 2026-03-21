@@ -35,3 +35,7 @@
 - redact account identifiers in any shared operator evidence
 - redact credentials and tokens before attaching artifacts to incidents or reviews
 - keep full-fidelity operator evidence inside the private operator context
+
+## Audit Checklist
+
+- 执行前后按 `docs/runbooks/audit-checklist.md` 完成审计核对

@@ -25,6 +25,7 @@
 - Observed checker / supervisor state:
 - Correlation ID:
 - Audit Event IDs:
+- Audit Checklist: `docs/runbooks/audit-checklist.md`
 
 ## Outcome
 
