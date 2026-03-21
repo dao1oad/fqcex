@@ -8,6 +8,7 @@ venv/
 # Build and logs
 dist/
 build/
+*.tsbuildinfo
 *.log
 *.jsonl
 node_modules/
