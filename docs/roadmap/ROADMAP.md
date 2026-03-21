@@ -35,11 +35,20 @@
 
 Phase 4 exits only after the platform boundary is documented without changing truth ownership and the audit/operator surface is fully documented.
 
-## Phase 5: Native Tier-1 Adapters
+## Phase 5: Live Readiness and Canary
+
+- Implement the minimum control-plane backend
+- Add live preflight, safety gates, operator approvals, and audit query paths
+- Run small-size live canaries on `Bybit`, `Binance`, and `OKX`
+- Produce live closeout, residual risk, and rollout guidance
+
+Phase 5 exits only after all three venues have live canary evidence, operator approvals, audit trail coverage, and a formal closeout.
+
+## Phase 6: Native Tier-1 Adapters
 
 - Replace selected Tier-1 venue paths with native adapters
 
-## Phase 6: Scale and HA
+## Phase 7: Scale and HA
 
 - Multi-account
 - Long-tail venues

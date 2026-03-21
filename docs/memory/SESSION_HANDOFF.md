@@ -24,11 +24,13 @@ py scripts/update_project_memory.py
 ## 当前建议切入点
 
 - 不要再从 Phase 1-3 的旧 worktree 恢复开发。
-- 直接以当前 `main` 为基线，按 Phase 4 顺序从 `#67` 开始。
+- Phase 4 已完成，新的切入点不再是 `#67`。
+- 直接以当前 `main` 为基线，按新增的 Phase 5 顺序从 `#145` 开始。
 - 如果会话目标涉及 issue / PR / 分支 / worktree 状态，先运行 `py scripts/update_project_memory.py`。
 
 ## 注意事项
 
 - `docs/plans/dry-run-evidence.md` 和 `docs/plans/dry-run-closeout.md` 已经是 Phase 3 的正式结论入口。
 - Phase 3 的结论只代表 `repository-scoped` 干跑，不要在后续文档里误写成真实交易所 live/testnet 已验证。
+- 当前主线虽然已完成 Phase 4 的 control-plane / audit 文档冻结，但还没有真实 live 环境、小资金 canary 和 operator UI 验收闭环。
 - `.codex/` 是本地运行态目录；需要主线真相时，以 GitHub issue / PR、`origin/main` 和仓库文档为准。

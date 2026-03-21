@@ -7,11 +7,12 @@
 ## 当前主线状态
 
 - 本地 `main` 已与 `origin/main` 对齐。
-- 当前远端主线最新提交为 `be28010a047f493c48e4fddc6e9d00fb1d84584f`。
+- 当前远端主线最新提交为 `7ed2793291ab9dc64d45c597905deead0e292408`。
 - GitHub 上已完成并关闭：
   - Phase 1 epic `#2`
   - Phase 2 epic `#3`
   - Phase 3 epic `#4`
+  - Phase 4 epic `#5`
 
 ## 冻结范围
 
@@ -49,6 +50,12 @@
   - `docs/plans/dry-run-evidence.md`
   - `docs/plans/dry-run-closeout.md`
 
+### Phase 4
+
+- control-plane API 表面、operator actions、tradeability / recovery 读模型边界
+- audit event、audit storage、retention / redaction / access control 约束
+- operator force resume / audit checklist 等运行手册边界
+
 ## 运行边界说明
 
 - Phase 3 的干跑结论只覆盖 `repository-scoped` 受控演练。
@@ -56,6 +63,6 @@
 
 ## 下一阶段
 
-- 下一个待执行 epic 是 Phase 4：`#5 [史诗] 第 4 阶段：平台化`
-- 当前顺序入口是 `#21 [跟踪] 设计外部控制平面与操作员 API`
-- 第一个 ready child issue 是 `#67 控制平面设计：定义外部 API 表面`
+- 下一个待执行 epic 是 Phase 5：`#141 [史诗] 第 5 阶段：Live Readiness 与 Canary 验收`
+- 当前顺序入口是 `#142 [跟踪] 落地最小控制平面与审计查询`
+- 第一个 ready child issue 是 `#145 控制平面实现：增加只读 HTTP 服务骨架与 health/readiness`
