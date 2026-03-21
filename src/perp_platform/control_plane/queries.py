@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from datetime import datetime
 from typing import Protocol
 
 
@@ -59,8 +60,8 @@ class AuditEventView:
 @dataclass(frozen=True)
 class AuditEventQuery:
     correlation_id: str | None = None
-    occurred_after: str | None = None
-    occurred_before: str | None = None
+    occurred_after: datetime | None = None
+    occurred_before: datetime | None = None
 
 
 class ControlPlaneQueryBackend(Protocol):
@@ -131,11 +132,15 @@ class InMemoryControlPlaneQueryBackend:
             )
         if query.occurred_after is not None:
             items = tuple(
-                item for item in items if item.occurred_at >= query.occurred_after
+                item
+                for item in items
+                if parse_rfc3339_timestamp(item.occurred_at) >= query.occurred_after
             )
         if query.occurred_before is not None:
             items = tuple(
-                item for item in items if item.occurred_at <= query.occurred_before
+                item
+                for item in items
+                if parse_rfc3339_timestamp(item.occurred_at) <= query.occurred_before
             )
         return items
 
@@ -149,3 +154,32 @@ def serialize_items(items: tuple[object, ...]) -> list[dict]:
 
 def serialize_item(item: object) -> dict:
     return asdict(item)
+
+
+def serialize_audit_items(items: tuple[AuditEventView, ...]) -> list[dict]:
+    return [serialize_audit_item(item) for item in items]
+
+
+def serialize_audit_item(item: AuditEventView) -> dict:
+    redacted_scope = {
+        key: value
+        for key, value in item.scope.items()
+        if key in {"venue", "instrument_id", "run_id"}
+    }
+    return {
+        "event_id": item.event_id,
+        "event_type": item.event_type,
+        "occurred_at": item.occurred_at,
+        "source_component": item.source_component,
+        "scope": redacted_scope,
+        "correlation_id": item.correlation_id,
+        "recorded_by": "redacted",
+    }
+
+
+def parse_rfc3339_timestamp(value: str) -> datetime:
+    normalized = value.replace("Z", "+00:00")
+    parsed = datetime.fromisoformat(normalized)
+    if parsed.tzinfo is None:
+        raise ValueError("timestamp must include timezone")
+    return parsed

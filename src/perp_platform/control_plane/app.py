@@ -15,6 +15,9 @@ from .queries import (
     AuditEventQuery,
     ControlPlaneQueryBackend,
     InMemoryControlPlaneQueryBackend,
+    parse_rfc3339_timestamp,
+    serialize_audit_item,
+    serialize_audit_items,
     serialize_item,
     serialize_items,
 )
@@ -106,13 +109,12 @@ class ControlPlaneApp:
             return self._success(serialize_item(item))
 
         if route_path == "/control-plane/v1/audit/events":
-            query = AuditEventQuery(
-                correlation_id=_first_query_value(query_params, "correlation_id"),
-                occurred_after=_first_query_value(query_params, "occurred_after"),
-                occurred_before=_first_query_value(query_params, "occurred_before"),
-            )
+            try:
+                query = _build_audit_query(query_params)
+            except ValueError as exc:
+                return self._invalid_request(str(exc))
             return self._success(
-                {"items": serialize_items(self._query_backend.list_audit_events(query))}
+                {"items": serialize_audit_items(self._query_backend.list_audit_events(query))}
             )
 
         if route_path.startswith("/control-plane/v1/audit/events/"):
@@ -120,7 +122,7 @@ class ControlPlaneApp:
             item = self._query_backend.get_audit_event(event_id)
             if item is None:
                 return self._not_found()
-            return self._success(serialize_item(item))
+            return self._success(serialize_audit_item(item))
 
         return self._not_found()
 
@@ -243,3 +245,24 @@ def _first_query_value(query_params: dict[str, list[str]], key: str) -> str | No
     if not values:
         return None
     return values[0]
+
+
+def _build_audit_query(query_params: dict[str, list[str]]) -> AuditEventQuery:
+    occurred_after = _first_query_value(query_params, "occurred_after")
+    occurred_before = _first_query_value(query_params, "occurred_before")
+    try:
+        return AuditEventQuery(
+            correlation_id=_first_query_value(query_params, "correlation_id"),
+            occurred_after=(
+                parse_rfc3339_timestamp(occurred_after)
+                if occurred_after is not None
+                else None
+            ),
+            occurred_before=(
+                parse_rfc3339_timestamp(occurred_before)
+                if occurred_before is not None
+                else None
+            ),
+        )
+    except ValueError as exc:
+        raise ValueError(f"invalid RFC3339 timestamp: {exc}") from exc

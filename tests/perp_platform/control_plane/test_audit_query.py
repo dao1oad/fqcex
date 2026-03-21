@@ -15,7 +15,11 @@ def build_backend() -> InMemoryControlPlaneQueryBackend:
                 event_type="operator_action",
                 occurred_at="2026-03-21T08:00:00Z",
                 source_component="control-plane",
-                scope={"venue": "BYBIT"},
+                scope={
+                    "venue": "BYBIT",
+                    "operator_note": "private",
+                    "account_id": "acct-1",
+                },
                 correlation_id="corr-1",
                 recorded_by="alice",
             ),
@@ -28,6 +32,15 @@ def build_backend() -> InMemoryControlPlaneQueryBackend:
                 correlation_id="corr-2",
                 recorded_by="system",
             ),
+            AuditEventView(
+                event_id="audit-3",
+                event_type="recovery",
+                occurred_at="2026-03-21T09:00:00+08:00",
+                source_component="supervisor",
+                scope={"venue": "BINANCE", "run_id": "run-3"},
+                correlation_id="corr-3",
+                recorded_by="ops",
+            ),
         )
     )
 
@@ -38,7 +51,7 @@ def test_audit_events_list_returns_items() -> None:
     response = app.handle("GET", "/control-plane/v1/audit/events")
 
     assert response.status_code == 200
-    assert len(response.body["data"]["items"]) == 2
+    assert len(response.body["data"]["items"]) == 3
 
 
 def test_audit_event_detail_returns_single_resource() -> None:
@@ -49,6 +62,8 @@ def test_audit_event_detail_returns_single_resource() -> None:
     assert response.status_code == 200
     assert response.body["data"]["event_id"] == "audit-1"
     assert response.body["data"]["correlation_id"] == "corr-1"
+    assert response.body["data"]["recorded_by"] == "redacted"
+    assert response.body["data"]["scope"] == {"venue": "BYBIT"}
 
 
 def test_audit_events_can_filter_by_correlation_id() -> None:
@@ -65,7 +80,7 @@ def test_audit_events_can_filter_by_correlation_id() -> None:
             "source_component": "supervisor",
             "scope": {"venue": "OKX"},
             "correlation_id": "corr-2",
-            "recorded_by": "system",
+            "recorded_by": "redacted",
         }
     ]
 
@@ -80,6 +95,30 @@ def test_audit_events_can_filter_by_time_window() -> None:
 
     assert response.status_code == 200
     assert [item["event_id"] for item in response.body["data"]["items"]] == ["audit-2"]
+
+
+def test_audit_events_compare_real_rfc3339_timestamps() -> None:
+    app = ControlPlaneApp(query_backend=build_backend())
+
+    response = app.handle(
+        "GET",
+        "/control-plane/v1/audit/events?occurred_after=2026-03-21T00:30:00Z&occurred_before=2026-03-21T01:30:00Z",
+    )
+
+    assert response.status_code == 200
+    assert [item["event_id"] for item in response.body["data"]["items"]] == ["audit-3"]
+
+
+def test_invalid_time_filter_returns_invalid_request() -> None:
+    app = ControlPlaneApp(query_backend=build_backend())
+
+    response = app.handle(
+        "GET",
+        "/control-plane/v1/audit/events?occurred_after=not-a-time",
+    )
+
+    assert response.status_code == 400
+    assert response.body["errors"][0]["code"] == "invalid_request"
 
 
 def test_missing_audit_event_returns_not_found() -> None:

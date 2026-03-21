@@ -120,6 +120,12 @@ python -m perp_platform.control_plane --host 127.0.0.1 --port 8080
 - `occurred_after`
 - `occurred_before`
 
+当前最小 audit query 语义：
+
+- shared view 默认返回 redacted `recorded_by`
+- `scope` 只保留最小上下文字段：`venue`、`instrument_id`、`run_id`
+- `occurred_after` / `occurred_before` 使用 RFC3339 时间语义
+
 ## Memory System
 
 新会话建议按下面顺序恢复上下文：

@@ -101,6 +101,10 @@
   - `correlation_id`
   - `occurred_after`
   - `occurred_before`
+- shared audit query 默认返回 redacted 视图：
+  - `recorded_by` 不暴露原始操作者标识
+  - `scope` 只保留最小 allowlist 上下文
+- 时间窗口过滤使用合法 RFC3339 时间戳，不接受未校验的自由字符串
 
 ## Retention Policy
 
