@@ -43,6 +43,22 @@ Build a connection management platform for multi-exchange perpetual futures arbi
 - Independent market suspicion signals: Cryptofeed checker
 - Control plane responses: projections from Supervisor/store/audit without changing truth ownership
 
+## Platformization Boundary
+
+- `NautilusTrader runtime` 继续负责 venue 连接、执行和订单/仓位/余额真相
+- `Supervisor` remains the tradeability truth source
+- `Control Plane remains projection-only`
+- `Control Plane` 只读取 `Supervisor`、store、checker 和 audit 的投影视图
+- `Audit logs` 负责保留恢复与操作员留痕，但不声明系统真相
+- Phase 4 的平台化不改变 Phase 1-3 已冻结的 truth ownership
+
+## Migration Plan
+
+1. 先冻结 control-plane api surface、operator action boundary 和 read models
+2. 再冻结 audit 事件、存储边界与运行手册
+3. 保持 runtime、Supervisor、store 的主真相链路不变
+4. 仅在文档边界稳定后，才考虑后续 transport、service split 或控制平面实现
+
 ## Checker Boundary
 
 - `Cryptofeed checker` uses venue `TICKER` streams as the independent Phase 1 top-of-book source for `Bybit`, `Binance Futures`, and `OKX`.
