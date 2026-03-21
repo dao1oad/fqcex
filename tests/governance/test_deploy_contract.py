@@ -32,20 +32,21 @@ def test_env_example_declares_minimal_deploy_contract() -> None:
     assert "PERP_PLATFORM_IMAGE_TAG=" in content
 
 
-def test_dockerfile_builds_and_runs_perp_platform() -> None:
+def test_dockerfile_builds_and_runs_control_plane() -> None:
     content = read_text("deploy/Dockerfile")
 
     assert "FROM python:3.12-slim" in content
     assert "python -m pip install ." in content
-    assert 'CMD ["python", "-m", "perp_platform"]' in content
+    assert 'CMD ["python", "-m", "perp_platform.control_plane"' in content
 
 
-def test_compose_defines_single_service_and_env_file() -> None:
+def test_compose_defines_dual_service_live_stack() -> None:
     content = read_text("deploy/docker-compose.yml")
 
-    assert "perp-platform:" in content
+    assert "control-plane:" in content
+    assert "operator-ui:" in content
     assert "env_file:" in content
-    assert ".env" in content
+    assert '${LIVE_CANARY_ENV_FILE:-.env}' in content
     assert 'image: "${PERP_PLATFORM_IMAGE_REPO}:${PERP_PLATFORM_IMAGE_TAG}"' in content
 
 
@@ -54,19 +55,20 @@ def test_bootstrap_and_deploy_scripts_define_expected_commands() -> None:
     deploy = read_text("deploy/scripts/deploy.sh")
 
     assert "docker compose version" in bootstrap
-    assert "deploy/.env" in bootstrap
+    assert 'ENV_FILE="${1:-$PROJECT_ROOT/deploy/.env}"' in bootstrap
     assert "mkdir -p" in bootstrap
     assert "docker compose" in deploy
     assert "build" in deploy
-    assert "run --rm perp-platform" in deploy
+    assert "up -d" in deploy
+    assert 'ENV_FILE="${1:-$PROJECT_ROOT/deploy/.env}"' in deploy
 
 
-def test_deploy_runbook_documents_steps_and_success_signal() -> None:
+def test_deploy_runbook_documents_live_stack_steps_and_success_signal() -> None:
     content = read_text("docs/runbooks/deploy.md")
 
     assert "# 部署 Runbook" in content
     assert "前置条件" in content
     assert "deploy/scripts/bootstrap-server.sh" in content
     assert "deploy/scripts/deploy.sh" in content
-    assert "bootstrap ready" in content
+    assert "Live Canary Preflight" in content
     assert "PERP_PLATFORM_IMAGE_TAG" in content

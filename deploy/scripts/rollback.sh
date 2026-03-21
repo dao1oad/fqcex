@@ -66,4 +66,16 @@ END {
 ' "$ENV_FILE" > "$TMP_ENV"
 
 echo "rolling back to ${TARGET_IMAGE}"
-docker compose --env-file "$TMP_ENV" -f "$COMPOSE_FILE" run --rm --no-build perp-platform
+LIVE_CANARY_ENV_FILE="$TMP_ENV" docker compose --env-file "$TMP_ENV" -f "$COMPOSE_FILE" up -d --no-build --force-recreate control-plane operator-ui
+
+CONTROL_PLANE_PORT=$(awk -F= '/^CONTROL_PLANE_PORT=/{print $2}' "$TMP_ENV")
+if [ -z "$CONTROL_PLANE_PORT" ]; then
+  CONTROL_PLANE_PORT=8080
+fi
+
+OPERATOR_UI_PORT=$(awk -F= '/^OPERATOR_UI_PORT=/{print $2}' "$TMP_ENV")
+if [ -z "$OPERATOR_UI_PORT" ]; then
+  OPERATOR_UI_PORT=4173
+fi
+
+python3 -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:${CONTROL_PLANE_PORT}/control-plane/v1/health'); urllib.request.urlopen('http://127.0.0.1:${OPERATOR_UI_PORT}/'); print('rollback stack healthy')"

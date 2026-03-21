@@ -70,9 +70,30 @@ preflight 会阻断：
 5. 三家 venue 的 credentials file 都已落在主机，且不在仓库内
 6. 已准备 incident 记录入口与 operator 审批记录
 
+## 部署步骤
+
+preflight 通过后，在目标主机运行：
+
+```sh
+deploy/scripts/deploy.sh /srv/perp-platform/deploy/.env
+```
+
+该脚本会：
+
+1. 构建 `control-plane` 与 `operator-ui` 两个服务
+2. 使用 `docker compose up -d` 拉起长期运行栈
+3. 对 `control-plane` 健康接口和 `operator-ui` 首页做最小健康检查
+
 ## 后续步骤
 
-preflight 通过后，再进入后续 live 安全闸门、operator UI 和 canary issue，不在本 runbook 中直接执行真实交易。
+部署栈通过后，再进入：
+
+- operator UI 人工验收
+- canary issue
+
+部署通过不等价于真实交易已执行。详细人工验收步骤见：
+
+- `docs/runbooks/live-canary-acceptance.md`
 
 ## Kill Switch 约定
 
