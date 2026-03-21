@@ -23,6 +23,8 @@
 - Manual recovery:
 - Manual resume or block:
 - Observed checker / supervisor state:
+- Correlation ID:
+- Audit Event IDs:
 
 ## Outcome
 

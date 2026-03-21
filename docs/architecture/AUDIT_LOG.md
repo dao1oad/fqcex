@@ -1,0 +1,83 @@
+# AUDIT LOG
+
+## Purpose
+
+定义 Phase 4 的最小审计事件模型，用于统一记录操作员动作、恢复流程和 `Supervisor` 状态变更。
+
+审计日志是 append-only trail，不是新的 truth source。
+
+## Common Fields
+
+所有审计事件至少包含：
+
+- `event_id`
+- `event_type`
+- `occurred_at`
+- `source_component`
+- `scope`
+- `correlation_id`
+- `recorded_by`
+
+## Operator Action Event
+
+用于记录人工操作员显式触发的控制动作。
+
+典型触发点：
+
+- `force_reduce_only`
+- `force_block`
+- `force_resume`
+
+最小补充字段：
+
+- `action_type`
+- `requested_by`
+- `reason`
+
+## Recovery Event
+
+用于记录恢复流程的开始、阶段推进、完成和阻断。
+
+典型触发点：
+
+- recovery started
+- reconciliation passed
+- reconciliation blocked
+- recovery completed
+
+最小补充字段：
+
+- `run_id`
+- `phase`
+- `status`
+- `trigger_reason`
+
+## Supervisor State Change Event
+
+用于记录 `Supervisor` 状态变更及其来源。
+
+典型触发点：
+
+- `LIVE -> DEGRADED`
+- `DEGRADED -> RESYNCING`
+- `REDUCE_ONLY -> BLOCKED`
+- manual override accepted
+
+最小补充字段：
+
+- `previous_state`
+- `next_state`
+- `trigger_source`
+
+## Event Sources
+
+- `Supervisor`
+- control-plane operator actions
+- recovery orchestration
+- checker projection inputs
+
+## Truth Boundary
+
+- 审计事件只保留留痕和关联上下文
+- 审计事件不替代 `Supervisor`、runtime 或 store 的主真相
+- `correlation_id` 用于把 operator action、recovery run 和 incident closeout 串在同一链路上
