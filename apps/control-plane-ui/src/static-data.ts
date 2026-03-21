@@ -1,4 +1,4 @@
-type VenueTradeability = {
+export type VenueTradeability = {
   venue: string;
   supervisorState: "LIVE" | "DEGRADED" | "REDUCE_ONLY";
   allowOpen: boolean;
@@ -6,7 +6,7 @@ type VenueTradeability = {
   reason: string;
 };
 
-type InstrumentTradeability = {
+export type InstrumentTradeability = {
   instrumentId: string;
   venue: string;
   supervisorState: string;
@@ -14,7 +14,7 @@ type InstrumentTradeability = {
   allowReduce: boolean;
 };
 
-type RecoveryRun = {
+export type RecoveryRun = {
   runId: string;
   phase: string;
   status: "running" | "ready" | "blocked";
@@ -22,7 +22,7 @@ type RecoveryRun = {
   blockersJson: string;
 };
 
-type AuditEvent = {
+export type AuditEvent = {
   eventId: string;
   eventType: string;
   occurredAt: string;
@@ -32,6 +32,23 @@ type AuditEvent = {
     venue: string;
     instrumentId?: string;
   };
+};
+
+export type OperatorActionName =
+  | "force_reduce_only"
+  | "force_block"
+  | "force_resume";
+
+export type OperatorActionTarget = {
+  id: string;
+  label: string;
+  venue: string;
+  instrumentId: string;
+  supervisorState: "LIVE" | "DEGRADED" | "REDUCE_ONLY";
+  allowReduce: boolean;
+  recoveryReady: boolean;
+  approvalRecorded: boolean;
+  killSwitchInactive: boolean;
 };
 
 export const venueTradeability: VenueTradeability[] = [
@@ -131,5 +148,41 @@ export const auditEvents: AuditEvent[] = [
       venue: "OKX",
       instrumentId: "ETH-USDT-PERP",
     },
+  },
+];
+
+export const operatorActionTargets: OperatorActionTarget[] = [
+  {
+    id: "BYBIT:BTC-USDT-PERP",
+    label: "BYBIT:BTC-USDT-PERP",
+    venue: "BYBIT",
+    instrumentId: "BTC-USDT-PERP",
+    supervisorState: "LIVE",
+    allowReduce: true,
+    recoveryReady: true,
+    approvalRecorded: true,
+    killSwitchInactive: true,
+  },
+  {
+    id: "BINANCE:ETH-USDT-PERP",
+    label: "BINANCE:ETH-USDT-PERP",
+    venue: "BINANCE",
+    instrumentId: "ETH-USDT-PERP",
+    supervisorState: "DEGRADED",
+    allowReduce: true,
+    recoveryReady: true,
+    approvalRecorded: true,
+    killSwitchInactive: true,
+  },
+  {
+    id: "OKX:BTC-USDT-PERP",
+    label: "OKX:BTC-USDT-PERP",
+    venue: "OKX",
+    instrumentId: "BTC-USDT-PERP",
+    supervisorState: "REDUCE_ONLY",
+    allowReduce: true,
+    recoveryReady: true,
+    approvalRecorded: false,
+    killSwitchInactive: true,
   },
 ];

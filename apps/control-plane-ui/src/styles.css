@@ -95,7 +95,9 @@ a {
 .table-card,
 .status-card,
 .timeline-card,
-.search-card {
+.search-card,
+.form-card,
+.requirements-card {
   background: var(--panel);
   border: 1px solid var(--panel-border);
   border-radius: var(--radius-md);
@@ -133,7 +135,9 @@ a {
 .status-card,
 .timeline-card,
 .search-card,
-.table-card {
+.table-card,
+.form-card,
+.requirements-card {
   padding: 20px;
 }
 
@@ -220,6 +224,99 @@ thead th {
   gap: 16px;
 }
 
+.actions-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+  gap: 20px;
+}
+
+.form-card {
+  display: grid;
+  gap: 18px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.field select,
+.field textarea {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  background: rgba(8, 12, 11, 0.86);
+  color: #f3f5f2;
+  padding: 12px 14px;
+  font: inherit;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 112px;
+}
+
+.requirements-card {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.requirements-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.requirements-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.requirements-list li.ok {
+  background: rgba(127, 212, 179, 0.1);
+}
+
+.requirements-list li.blocked {
+  background: rgba(222, 127, 116, 0.12);
+}
+
+button[type="submit"] {
+  border: 1px solid rgba(200, 161, 93, 0.35);
+  border-radius: var(--radius-sm);
+  background: rgba(200, 161, 93, 0.14);
+  color: #f3f5f2;
+  padding: 14px 18px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button[type="submit"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.nested-card {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.empty-state {
+  color: var(--text-muted);
+}
+
 .timeline-phase {
   color: #eff3ee;
   font-weight: 600;
@@ -261,5 +358,9 @@ code {
 
   .main-panel {
     padding: 24px;
+  }
+
+  .actions-layout {
+    grid-template-columns: 1fr;
   }
 }
